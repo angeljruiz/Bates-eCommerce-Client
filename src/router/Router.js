@@ -11,7 +11,7 @@ import StoreAdmin from "../components/Admin/StoreAdmin";
 import Checkout from "../components/Checkout/Checkout";
 import LoginDashboard from "../components/LoginSignup/LoginDashboard";
 import SignupDashboard from "../components/LoginSignup/SignupDashboard";
-import ViewProduct from "../components/Product/ViewProduct";
+import ProductPage from "../components/Product/ProductPage";
 
 function Router(props) {
   return (
@@ -23,7 +23,7 @@ function Router(props) {
             path="/"
             exact
             component={LandingPage}
-            products={props.products}
+            // products={props.products}
           />
           <Route path="/admin" exact component={SuperAdmin} />
           <Route path="/storeadmin" exact component={StoreAdmin} />
@@ -31,9 +31,9 @@ function Router(props) {
           <Route path="/login" exact component={LoginDashboard} />
           <Route path="/signup" exact component={SignupDashboard} />
           <Route
-            path="/viewproduct/:sku"
+            path="/product/:sku"
             exact
-            component={ViewProduct}
+            component={ProductPage}
             dispatch={props.dispatch}
           />
         </Switch>

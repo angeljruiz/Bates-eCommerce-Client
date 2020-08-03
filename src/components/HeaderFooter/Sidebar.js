@@ -14,7 +14,6 @@ import {
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 // import LockIcon from "@material-ui/icons/Lock";
-import MenuIcon from "@material-ui/icons/Menu";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -115,6 +114,18 @@ function Sidebar() {
           </ListItemAvatar>
           <ListItemText primary="Login" />
         </ListItemButton>
+        <ListItemButton
+          selected={location.pathname === "/admin"}
+          onClick={() => followLink("/storeadmin")}
+        >
+          <ListItemAvatar>
+            <Avatar>
+              <FontAwesomeIcon icon="sign-in-alt" />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="Dashboard" />
+        </ListItemButton>
+
         <ListItemButton
           selected={location.pathname === "/signup"}
           onClick={() => followLink("/signup")}
