@@ -14,6 +14,7 @@ import {
   Hidden,
   Fab,
   Modal,
+  Container,
 } from "@material-ui/core";
 // import DeleteIcon from "@material-ui/icons/Delete";
 // import EditIcon from "@material-ui/icons/Edit";
@@ -88,6 +89,13 @@ const useStyles = makeStyles((theme) => ({
 
   modal: {
     marginTop: theme.spacing(2),
+    overflow: "scroll",
+  },
+
+  fab: {
+    position: "fixed",
+    right: theme.spacing(1),
+    bottom: theme.spacing(2),
   },
 
   toolbar: theme.mixins.toolbar,
