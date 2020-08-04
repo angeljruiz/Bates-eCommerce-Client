@@ -148,7 +148,12 @@ function StoreAdmin() {
       </Modal>
       <Grid container>
         <Grid item xs={12} md={4}>
-          <Widget name="Product" list={products} action={selectItem} />
+          <Widget
+            name="Product"
+            list={products}
+            action={selectItem}
+            buttonAction={() => modalButton(true)}
+          />
         </Grid>
         <Grid item xs={12} md={4}>
           <Widget

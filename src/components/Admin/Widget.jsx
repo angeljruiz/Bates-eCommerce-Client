@@ -52,7 +52,7 @@ function Title(props) {
   );
 }
 
-export default function Widget({ name, list, action }) {
+export default function Widget({ name, list, action, buttonAction }) {
   const classes = useStyles();
 
   if (!list || list.length === 0) return <></>;
@@ -81,8 +81,10 @@ export default function Widget({ name, list, action }) {
             })}
           </TableBody>
         </Table>
-        {/* onClick={modalButton} */}
-        <Button color="primary">Add a {name}</Button>
+
+        <Button onClick={buttonAction} color="primary">
+          Add a {name}
+        </Button>
       </Paper>
     </>
   );

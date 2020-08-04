@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import { deleteProduct } from "../../actions/productsActions";
 import { AppForm, AppFormField } from "../Form";
 import SubmitButton from "../Form/SubmitButton";
+import { showDashProductModal } from "../../actions/globalActions";
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -47,6 +48,7 @@ const ProductDetails = ({ id }) => {
 
   const handleDelete = (id) => {
     dispatch(deleteProduct(id));
+    dispatch(showDashProductModal(false));
     fetch("/product", {
       method: "DELETE",
       body: JSON.stringify({ sku: id }),
