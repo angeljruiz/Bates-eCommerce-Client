@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/styles";
 import {
   Card,
@@ -11,6 +12,7 @@ import {
 } from "@material-ui/core";
 import * as Yup from "yup";
 
+import { deleteProduct } from "../../actions/productsActions";
 import { AppForm, AppFormField } from "../Form";
 import SubmitButton from "../Form/SubmitButton";
 
@@ -19,31 +21,53 @@ const useStyles = makeStyles(() => ({
 }));
 
 const validationSchema = Yup.object().shape({
-  sku: Yup.string().required().label("SKU"),
+  sku: Yup.number().required().label("SKU"),
   price: Yup.number().required().label("Price"),
   name: Yup.string().required().min(4).label("Name"),
-  quantity: Yup.string().required().label("Quantity"),
+  quantity: Yup.number().required().label("Quantity"),
   description: Yup.string().label("Description"),
-  section: Yup.string().required().label("Section"),
+  // section: Yup.string().required().label("Section"),
 });
 
-const ProductDetails = (props) => {
-  const { ...rest } = props;
-
+const ProductDetails = ({ id }) => {
+  const product =
+    useSelector((state) => state.products.find((p) => p.sku === id)) || {};
+  const dispatch = useDispatch();
   const classes = useStyles();
 
+  const handleSave = (body) => {
+    fetch("/product", {
+      method: id ? "PATCH" : "POST",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
+  const handleDelete = (id) => {
+    dispatch(deleteProduct(id));
+    fetch("/product", {
+      method: "DELETE",
+      body: JSON.stringify({ sku: id }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  };
+
   return (
-    <Card {...rest} className={classes.root}>
+    <Card className={classes.root}>
       <AppForm
         initialValues={{
-          sku: "",
-          name: "",
-          price: "",
-          description: "",
-          quantity: "",
-          section: "",
+          sku: product.sku || "",
+          name: product.name || "",
+          price: product.price || "",
+          description: product.description || "",
+          quantity: product.quantity || "",
+          section: product.section || "",
         }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSave}
         validationSchema={validationSchema}
       >
         <CardHeader title="Profile" />
@@ -57,7 +81,9 @@ const ProductDetails = (props) => {
                 margin="dense"
                 name="sku"
                 required
+                type="number"
                 variant="outlined"
+                defaultValue={product.sku || ""}
               />
             </Grid>
             <Grid item md={6} xs={12}>
@@ -68,17 +94,19 @@ const ProductDetails = (props) => {
                 name="name"
                 required
                 variant="outlined"
+                defaultValue={product.name || ""}
               />
             </Grid>
             <Grid item md={6} xs={12}>
               <AppFormField
                 fullWidth
-                label="Price *"
+                label="Price"
                 margin="dense"
                 name="price"
                 required
                 type="number"
                 variant="outlined"
+                defaultValue={product.price || ""}
               />
             </Grid>
             <Grid item md={6} xs={12}>
@@ -89,17 +117,18 @@ const ProductDetails = (props) => {
                 name="description"
                 required
                 variant="outlined"
+                defaultValue={product.description || ""}
               />
             </Grid>
             <Grid item md={6} xs={12}>
               <AppFormField
                 fullWidth
-                label="Quantity *"
-                margin="dense"
+                label="Quantity"
                 name="quantity"
-                required
                 type="number"
+                required
                 variant="outlined"
+                defaultValue={product.quantity || ""}
               />
             </Grid>
             <Grid item md={6} xs={12}>
@@ -110,6 +139,7 @@ const ProductDetails = (props) => {
                 name="section"
                 required
                 variant="outlined"
+                defaultValue={product.section || ""}
               />
             </Grid>
           </Grid>
@@ -117,9 +147,15 @@ const ProductDetails = (props) => {
         <Divider />
         <CardActions>
           <SubmitButton title="save" />
-          <Button color="secondary" variant="contained">
-            Delete
-          </Button>
+          {id && (
+            <Button
+              onClick={() => handleDelete(id)}
+              color="secondary"
+              variant="contained"
+            >
+              Delete
+            </Button>
+          )}
         </CardActions>
       </AppForm>
     </Card>

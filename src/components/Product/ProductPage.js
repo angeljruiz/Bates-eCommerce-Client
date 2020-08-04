@@ -10,17 +10,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductPage = () => {
+const ProductPage = ({ id }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Grid container spacing={4}>
         <Grid item lg={4} md={6} xl={4} xs={12}>
-          <ProductSlideshow />
+          <ProductSlideshow id={id} />
         </Grid>
         <Grid item lg={8} md={6} xl={8} xs={12}>
-          <ProductDetails />
+          <ProductDetails id={id} />
         </Grid>
       </Grid>
     </div>

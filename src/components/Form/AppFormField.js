@@ -9,15 +9,14 @@ function AppFormField({ name, type = "text", label, ...otherProps }) {
 
   return (
     <>
-      {type === "text" && (
-        <TextField
-          onBlur={() => setFieldTouched(name)}
-          onChange={handleChange(name)}
-          label={label}
-          {...otherProps}
-        />
-      )}
-      {type === "number" && (
+      <TextField
+        onBlur={() => setFieldTouched(name)}
+        onChange={handleChange(name)}
+        label={label}
+        {...otherProps}
+      />
+
+      {/* {type === "number" && (
         <Input
           type="number"
           onBlur={() => setFieldTouched(name)}
@@ -25,7 +24,7 @@ function AppFormField({ name, type = "text", label, ...otherProps }) {
           placeholder={label}
           {...otherProps}
         />
-      )}
+      )} */}
       <ErrorMessage error={errors[name]} visible={touched[name]} />
     </>
   );

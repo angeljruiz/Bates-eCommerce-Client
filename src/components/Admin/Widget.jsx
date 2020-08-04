@@ -57,10 +57,17 @@ function Title(props) {
 
 export default function Widget({ name, list, Content }) {
   const [modal, showModal] = useState(false);
+  const [selectedSKU, changeSKU] = useState();
   const classes = useStyles();
 
   const modalButton = (show) => {
+    if (!show) changeSKU(null);
     showModal(show);
+  };
+
+  const selectItem = (i) => {
+    changeSKU(list[i].Id);
+    showModal(true);
   };
 
   if (!list || list.length === 0) return <></>;
@@ -78,9 +85,9 @@ export default function Widget({ name, list, Content }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {list.map((l, i) => {
+            {list.map((l, j) => {
               return (
-                <TableRow key={i}>
+                <TableRow onClick={() => selectItem(j)} hover key={j}>
                   {Object.keys(l).map((k, i) => (
                     <TableCell key={i}>{l[k]}</TableCell>
                   ))}
@@ -94,7 +101,7 @@ export default function Widget({ name, list, Content }) {
         </Button>
       </Paper>
       <Modal
-        open={modal}
+        open={!!modal}
         onClose={() => modalButton(false)}
         onEscapeKeyDown={() => modalButton(false)}
         aria-labelledby="simple-modal"
@@ -103,7 +110,7 @@ export default function Widget({ name, list, Content }) {
       >
         <>
           <div className={classes.toolbar} />
-          <Content id="wModal" />
+          <Content id={selectedSKU} />
           <Hidden mdUp>
             <Fab
               color="secondary"
