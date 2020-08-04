@@ -1,12 +1,11 @@
 import React from "react";
-import { makeStyles } from "@material-ui/styles";
-import { Grid } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 
 import { ProductDetails, ProductSlideshow } from "./";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // padding: theme.spacing(4),
+    padding: theme.spacing(4),
   },
 }));
 

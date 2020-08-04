@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-import clsx from "clsx";
 import {
   Card,
   CardActions,
@@ -11,6 +9,7 @@ import {
   Button,
   makeStyles,
 } from "@material-ui/core";
+import { useSelector, shallowEqual } from "react-redux";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -31,58 +30,49 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-const ProductSlideshow = (props) => {
-  const { className, ...rest } = props;
-
+const ProductSlideshow = ({ id }) => {
+  const { name } =
+    useSelector(
+      (state) => state.products.find((p) => p.sku === id),
+      shallowEqual
+    ) || {};
   const classes = useStyles();
 
-  const user = {
-    name: "Shen Zhi",
-    city: "Los Angeles",
-    country: "USA",
-    timezone: "GTM-7",
-    avatar: "/images/avatars/avatar_11.png",
+  const handleUpload = (event) => {
+    console.log(URL.createObjectURL(event.currentTarget.files[0]));
   };
 
   return (
-    <Card {...rest} className={clsx(classes.root, className)}>
+    <Card className={classes.root}>
       <CardContent>
-        <div className={classes.details}>
+        <div id="details" className={classes.details}>
           <div>
-            <Typography gutterBottom variant="h2">
-              John Doe
-            </Typography>
-            <Typography
-              className={classes.locationText}
-              color="textSecondary"
-              variant="body1"
-            >
-              {user.city}, {user.country}
-            </Typography>
-            <Typography
-              className={classes.dateText}
-              color="textSecondary"
-              variant="body1"
-            >
-              11111
+            <Typography gutterBottom variant="h4">
+              {name}
             </Typography>
           </div>
-          <Avatar className={classes.avatar} src={user.avatar} />
+          <Avatar className={classes.avatar} />
         </div>
       </CardContent>
       <Divider />
       <CardActions>
-        <Button className={classes.uploadButton} color="primary" variant="text">
+        <Button
+          className={classes.uploadButton}
+          color="primary"
+          variant="text"
+          component="label"
+        >
           Upload picture
+          <input
+            type="file"
+            onChange={handleUpload}
+            style={{ display: "none" }}
+          />
         </Button>
         <Button variant="text">Remove picture</Button>
       </CardActions>
     </Card>
   );
-};
-
-ProductSlideshow.propTypes = {
-  className: PropTypes.string,
 };
 
 export default ProductSlideshow;

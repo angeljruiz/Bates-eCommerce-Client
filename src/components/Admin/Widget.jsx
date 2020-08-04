@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Paper,
   makeStyles,
@@ -9,9 +9,6 @@ import {
   TableBody,
   Button,
   Typography,
-  Modal,
-  Fab,
-  Hidden,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -55,20 +52,8 @@ function Title(props) {
   );
 }
 
-export default function Widget({ name, list, Content }) {
-  const [modal, showModal] = useState(false);
-  const [selectedSKU, changeSKU] = useState();
+export default function Widget({ name, list, action }) {
   const classes = useStyles();
-
-  const modalButton = (show) => {
-    if (!show) changeSKU(null);
-    showModal(show);
-  };
-
-  const selectItem = (i) => {
-    changeSKU(list[i].Id);
-    showModal(true);
-  };
 
   if (!list || list.length === 0) return <></>;
 
@@ -87,7 +72,7 @@ export default function Widget({ name, list, Content }) {
           <TableBody>
             {list.map((l, j) => {
               return (
-                <TableRow onClick={() => selectItem(j)} hover key={j}>
+                <TableRow onClick={() => action(j)} hover key={j}>
                   {Object.keys(l).map((k, i) => (
                     <TableCell key={i}>{l[k]}</TableCell>
                   ))}
@@ -96,32 +81,9 @@ export default function Widget({ name, list, Content }) {
             })}
           </TableBody>
         </Table>
-        <Button color="primary" onClick={modalButton}>
-          Add a {name}
-        </Button>
+        {/* onClick={modalButton} */}
+        <Button color="primary">Add a {name}</Button>
       </Paper>
-      <Modal
-        open={!!modal}
-        onClose={() => modalButton(false)}
-        onEscapeKeyDown={() => modalButton(false)}
-        aria-labelledby="simple-modal"
-        aria-describedby="simple-modal"
-        className={classes.modal}
-      >
-        <>
-          <div className={classes.toolbar} />
-          <Content id={selectedSKU} />
-          <Hidden mdUp>
-            <Fab
-              color="secondary"
-              className={classes.fab}
-              onClick={() => modalButton(false)}
-            >
-              <Typography className={classes.fabButton}>X</Typography>
-            </Fab>
-          </Hidden>
-        </>
-      </Modal>
     </>
   );
 }

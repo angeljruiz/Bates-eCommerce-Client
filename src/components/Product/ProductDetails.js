@@ -70,7 +70,7 @@ const ProductDetails = ({ id }) => {
         onSubmit={handleSave}
         validationSchema={validationSchema}
       >
-        <CardHeader title="Profile" />
+        <CardHeader title="Details" />
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
