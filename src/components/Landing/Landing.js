@@ -17,7 +17,7 @@ function Landing() {
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  fetch("/storelanding").then(async (newproducts) => {
+  fetch("/product").then(async (newproducts) => {
     let images = [];
     newproducts = await newproducts.json();
     if (products.length === 0) return;

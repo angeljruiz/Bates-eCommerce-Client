@@ -49,9 +49,8 @@ const ProductDetails = ({ id }) => {
   const handleDelete = (id) => {
     dispatch(deleteProduct(id));
     dispatch(showDashProductModal(false));
-    fetch("/product", {
+    fetch(`/product/${id}`, {
       method: "DELETE",
-      body: JSON.stringify({ sku: id }),
       headers: {
         "Content-Type": "application/json",
       },

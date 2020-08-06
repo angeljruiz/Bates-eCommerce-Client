@@ -27,7 +27,7 @@ library.add(
 
 class App extends React.Component {
   componentDidMount() {
-    fetch("/storelanding").then(async (products) => {
+    fetch("/product").then(async (products) => {
       let images = [];
       products = await products.json();
       products = products.filter(

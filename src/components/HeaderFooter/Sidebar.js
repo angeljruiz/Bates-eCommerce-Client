@@ -115,7 +115,7 @@ function Sidebar() {
           <ListItemText primary="Login" />
         </ListItemButton>
         <ListItemButton
-          selected={location.pathname === "/admin"}
+          selected={location.pathname === "/storeadmin"}
           onClick={() => followLink("/storeadmin")}
         >
           <ListItemAvatar>
