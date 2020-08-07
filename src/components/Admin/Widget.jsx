@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: theme.spacing(2),
     padding: theme.spacing(2),
+    overflow: "scroll",
   },
 
   paper: {
@@ -52,7 +53,18 @@ function Title(props) {
   );
 }
 
-export default function Widget({ name, list, action, buttonAction }) {
+function adjustTitle(title) {
+  var result = title.replace(/([A-Z])/g, " $1");
+  return result.charAt(0).toUpperCase() + result.slice(1);
+}
+
+export default function Widget({
+  name,
+  list,
+  action,
+  buttonAction,
+  buttonText,
+}) {
   const classes = useStyles();
 
   if (!list || list.length === 0) return <></>;
@@ -60,21 +72,35 @@ export default function Widget({ name, list, action, buttonAction }) {
   return (
     <>
       <Paper className={classes.root}>
-        <Title>{name}s</Title>
+        <Title>{name}</Title>
         <Table size="small">
           <TableHead>
             <TableRow>
-              {Object.keys(list[0]).map((k, i) => (
-                <TableCell key={i}>{k}</TableCell>
+              {Object.keys(list[0]).map((k, i, self) => (
+                <TableCell
+                  align={i === self.length - 1 ? "right" : "inherit"}
+                  key={i}
+                >
+                  {adjustTitle(k)}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {list.map((l, j) => {
               return (
-                <TableRow onClick={() => action(j)} hover key={j}>
-                  {Object.keys(l).map((k, i) => (
-                    <TableCell key={i}>{l[k]}</TableCell>
+                <TableRow
+                  onClick={() => (action ? action(j) : "")}
+                  hover
+                  key={j}
+                >
+                  {Object.keys(l).map((k, i, self) => (
+                    <TableCell
+                      align={i === self.length - 1 ? "right" : "inherit"}
+                      key={i}
+                    >
+                      {l[k]}
+                    </TableCell>
                   ))}
                 </TableRow>
               );
@@ -83,7 +109,7 @@ export default function Widget({ name, list, action, buttonAction }) {
         </Table>
 
         <Button onClick={buttonAction} color="primary">
-          Add a {name}
+          {buttonText}
         </Button>
       </Paper>
     </>

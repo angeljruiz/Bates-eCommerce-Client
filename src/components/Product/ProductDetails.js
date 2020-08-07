@@ -12,13 +12,16 @@ import {
 } from "@material-ui/core";
 import * as Yup from "yup";
 
-import { deleteProduct } from "../../actions/productsActions";
+import { deleteProduct, addProduct } from "../../actions/productsActions";
 import { AppForm, AppFormField } from "../Form";
 import SubmitButton from "../Form/SubmitButton";
-import { showDashProductModal } from "../../actions/globalActions";
+import {
+  showDashProductModal,
+  selectProduct,
+} from "../../actions/globalActions";
 
 const useStyles = makeStyles(() => ({
-  root: {},
+  root: { margin: "0 auto" },
 }));
 
 const validationSchema = Yup.object().shape({
@@ -39,11 +42,13 @@ const ProductDetails = ({ id }) => {
   const handleSave = (body) => {
     fetch("/product", {
       method: id ? "PATCH" : "POST",
-      body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(body),
     });
+    dispatch(addProduct([body]));
+    dispatch(selectProduct(body.sku));
   };
 
   const handleDelete = (id) => {

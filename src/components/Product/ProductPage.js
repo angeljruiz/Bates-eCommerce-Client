@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles, Container } from "@material-ui/core";
 
 import { ProductDetails, ProductSlideshow } from "./";
 
@@ -13,7 +13,7 @@ const ProductPage = ({ id }) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <Container className={classes.root}>
       <Grid container spacing={4}>
         <Grid item lg={4} md={6} xl={4} xs={12}>
           <ProductSlideshow id={id} />
@@ -22,7 +22,7 @@ const ProductPage = ({ id }) => {
           <ProductDetails id={id} />
         </Grid>
       </Grid>
-    </div>
+    </Container>
   );
 };
 

@@ -39,9 +39,8 @@ class App extends React.Component {
       Promise.all(images).then((data) => {
         data = data.map((d) => d.blob());
         Promise.all(data).then((data) => {
-          products = products.map((p, index) => {
+          products.forEach((p, index) => {
             p.image = URL.createObjectURL(data[index]);
-            return p;
           });
           if (products.length > 0) this.props.dispatch(addProduct(products));
         });

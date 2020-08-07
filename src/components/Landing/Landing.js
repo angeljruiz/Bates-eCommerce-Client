@@ -25,7 +25,11 @@ function Landing() {
       (p) => products.findIndex((s) => s.sku === p.sku) === -1
     );
     newproducts.forEach((product) => {
-      images.push(fetch("/main?sku=" + product.sku));
+      images.push(
+        fetch(
+          `/product/${product.sku}/image?${new URLSearchParams([["limit", 1]])}`
+        )
+      );
     });
     Promise.all(images).then((data) => {
       data = data.map((d) => d.blob());

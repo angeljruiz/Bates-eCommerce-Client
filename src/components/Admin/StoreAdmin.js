@@ -2,22 +2,12 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Typography,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Button,
-  Paper,
   makeStyles,
   Grid,
   Hidden,
   Fab,
   Modal,
-  Container,
 } from "@material-ui/core";
-// import DeleteIcon from "@material-ui/icons/Delete";
-// import EditIcon from "@material-ui/icons/Edit";
 
 import {
   showDashProductModal,
@@ -25,14 +15,6 @@ import {
 } from "../../actions/globalActions";
 import { ProductPage } from "../Product";
 import Widget from "./Widget";
-
-function Title(props) {
-  return (
-    <Typography component="h2" variant="h6" color="primary" gutterBottom>
-      {props.children}
-    </Typography>
-  );
-}
 
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
@@ -149,46 +131,27 @@ function StoreAdmin() {
       <Grid container>
         <Grid item xs={12} md={4}>
           <Widget
-            name="Product"
+            name="Products"
             list={products}
             action={selectItem}
             buttonAction={() => modalButton(true)}
+            buttonText="Add a Product"
           />
         </Grid>
         <Grid item xs={12} md={4}>
           <Widget
-            name="Section"
+            name="Sections"
             list={[{ Order: 1, Name: "Featured" }]}
-            Content={ProductPage}
+            buttonText="Add a Section"
           />
         </Grid>
         <Grid item xs={12}>
-          <Paper className={classes.root}>
-            <Title>Recent Orders</Title>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Ship To</TableCell>
-                  <TableCell>Payment Method</TableCell>
-                  <TableCell align="right">Sale Amount</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {rows.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell>{row.date}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.shipTo}</TableCell>
-                    <TableCell>{row.paymentMethod}</TableCell>
-                    <TableCell align="right">{row.amount}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <Button color="primary">See more orders</Button>
-          </Paper>
+          <Widget
+            name="Recent Orders"
+            list={rows}
+            Content={ProductPage}
+            buttonText="See more orders"
+          />
         </Grid>
       </Grid>
     </>
