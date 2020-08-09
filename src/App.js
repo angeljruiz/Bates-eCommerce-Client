@@ -28,23 +28,23 @@ library.add(
 class App extends React.Component {
   componentDidMount() {
     fetch("/product").then(async (products) => {
-      let images = [];
       products = await products.json();
       products = products.filter(
         (p) => this.props.products.findIndex((s) => s.sku === p.sku) === -1
       );
       products.forEach((product) => {
-        images.push(fetch("/main?sku=" + product.sku));
+        if (!product.images) {
+          product.images = [];
+          return;
+        }
+        if (Array.isArray(product.images)) {
+          product.image = product.images[0].url;
+        } else {
+          product.image = product.images.url;
+          product.images = [product.images];
+        }
       });
-      Promise.all(images).then((data) => {
-        data = data.map((d) => d.blob());
-        Promise.all(data).then((data) => {
-          products.forEach((p, index) => {
-            p.image = URL.createObjectURL(data[index]);
-          });
-          if (products.length > 0) this.props.dispatch(addProduct(products));
-        });
-      });
+      if (products.length > 0) this.props.dispatch(addProduct(products));
     });
     fetch("/isLogged")
       .then((data) => data.json())

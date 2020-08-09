@@ -8,14 +8,24 @@ import {
   Divider,
   Button,
   makeStyles,
+  Grid,
 } from "@material-ui/core";
-import { useSelector, shallowEqual } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import axios from "axios";
+import { selectProductThumb } from "../../actions/globalActions";
+import { addImage, deleteImage } from "../../actions/productsActions";
 
 const useStyles = makeStyles((theme) => {
   return {
     root: {},
+    card: {
+      width: "100%",
+      height: "125px",
+    },
+    cardContent: {},
     details: {
       display: "flex",
+      marginBottom: theme.spacing(2),
     },
     avatar: {
       marginLeft: "auto",
@@ -24,6 +34,9 @@ const useStyles = makeStyles((theme) => {
       flexShrink: 0,
       flexGrow: 0,
     },
+    selected: {
+      border: `3px solid ${theme.palette.primary.dark}`,
+    },
     uploadButton: {
       marginRight: theme.spacing(2),
     },
@@ -31,15 +44,38 @@ const useStyles = makeStyles((theme) => {
 });
 
 const ProductSlideshow = ({ id }) => {
-  const { name } =
+  const { name, images } =
     useSelector(
       (state) => state.products.find((p) => p.sku === id),
       shallowEqual
     ) || {};
+  const selectedThumb = useSelector(
+    (state) => state.global.dash.selectedProductThumb
+  );
+  const dispatch = useDispatch();
   const classes = useStyles();
 
   const handleUpload = (event) => {
-    console.log(URL.createObjectURL(event.currentTarget.files[0]));
+    let data = new FormData();
+    data.append("file", event.target.files[0]);
+    axios.post(`/product/${id}/image`, data).then((image) => {
+      dispatch(addImage(id, image.data));
+    });
+  };
+
+  const handleRemove = () => {
+    axios
+      .delete(`/product/${id}/image/${images[selectedThumb].name}`)
+      .then((success) => {
+        if (success) {
+          dispatch(selectProductThumb(null));
+          dispatch(deleteImage(id, selectedThumb));
+        }
+      });
+  };
+
+  const selectThumb = (i) => {
+    dispatch(selectProductThumb(i));
   };
 
   return (
@@ -53,23 +89,49 @@ const ProductSlideshow = ({ id }) => {
           </div>
           <Avatar className={classes.avatar} />
         </div>
+        <Grid container direction="row" spacing={2}>
+          {id &&
+            images.map((image, i) => {
+              return (
+                <Grid item xs={6} key={i}>
+                  <Avatar
+                    className={`${classes.card} ${
+                      selectedThumb === i ? classes.selected : ""
+                    }`}
+                    id={`product-thumb-${i}`}
+                    onClick={() => selectThumb(i)}
+                    variant="rounded"
+                    src={image.url}
+                  >
+                    {""}
+                  </Avatar>
+                </Grid>
+              );
+            })}
+        </Grid>
       </CardContent>
       <Divider />
       <CardActions>
-        <Button
-          className={classes.uploadButton}
-          color="primary"
-          variant="text"
-          component="label"
-        >
-          Upload picture
-          <input
-            type="file"
-            onChange={handleUpload}
-            style={{ display: "none" }}
-          />
-        </Button>
-        <Button variant="text">Remove picture</Button>
+        {id && (
+          <Button
+            className={classes.uploadButton}
+            color="primary"
+            variant="text"
+            component="label"
+          >
+            Upload picture
+            <input
+              type="file"
+              onChange={handleUpload}
+              style={{ display: "none" }}
+            />
+          </Button>
+        )}
+        {Number.isInteger(selectedThumb) && (
+          <Button onClick={handleRemove} variant="text">
+            Remove picture
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

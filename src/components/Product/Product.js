@@ -39,11 +39,13 @@ function Product({ sku }) {
         disableRipple
         // onClick={() => history.push(`/product/${product.sku}`)}
       >
-        <CardMedia
-          className={classes.productImg}
-          image={product.image}
-          title={product.name}
-        />
+        {product.image && (
+          <CardMedia
+            className={classes.productImg}
+            image={product.image}
+            title={product.name}
+          />
+        )}
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {product.name}

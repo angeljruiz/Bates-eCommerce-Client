@@ -13,3 +13,11 @@ export const selectProduct = (id) => {
     id,
   };
 };
+
+export const selectProductThumb = (id) => {
+  return {
+    type: "SELECT_PRODUCT_THUMB",
+    reducer: "dash",
+    id,
+  };
+};

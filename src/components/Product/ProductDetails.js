@@ -56,9 +56,6 @@ const ProductDetails = ({ id }) => {
     dispatch(showDashProductModal(false));
     fetch(`/product/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
   };
 

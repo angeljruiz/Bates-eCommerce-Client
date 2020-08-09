@@ -12,6 +12,7 @@ import {
 import {
   showDashProductModal,
   selectProduct,
+  selectProductThumb,
 } from "../../actions/globalActions";
 import { ProductPage } from "../Product";
 import Widget from "./Widget";
@@ -95,7 +96,10 @@ function StoreAdmin() {
   const classes = useStyles();
 
   const modalButton = (show) => {
-    if (!show) dispatch(selectProduct(null));
+    if (!show) {
+      dispatch(selectProduct(null));
+      dispatch(selectProductThumb(null));
+    }
     dispatch(showDashProductModal(show));
   };
 
