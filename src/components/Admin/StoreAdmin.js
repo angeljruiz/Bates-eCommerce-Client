@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import {
   Typography,
   makeStyles,
@@ -13,56 +13,11 @@ import {
   showDashProductModal,
   selectProduct,
   selectProductThumb,
+  addOrders,
 } from "../../actions/globalActions";
 import { ProductPage } from "../Product";
 import Widget from "./Widget";
-
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
-
-const rows = [
-  createData(
-    0,
-    "16 Mar, 2019",
-    "Elvis Presley",
-    "Tupelo, MS",
-    "VISA ⠀•••• 3719",
-    312.44
-  ),
-  createData(
-    1,
-    "16 Mar, 2019",
-    "Paul McCartney",
-    "London, UK",
-    "VISA ⠀•••• 2574",
-    866.99
-  ),
-  createData(
-    2,
-    "16 Mar, 2019",
-    "Tom Scholz",
-    "Boston, MA",
-    "MC ⠀•••• 1253",
-    100.81
-  ),
-  createData(
-    3,
-    "16 Mar, 2019",
-    "Michael Jackson",
-    "Gary, IN",
-    "AMEX ⠀•••• 2000",
-    654.39
-  ),
-  createData(
-    4,
-    "15 Mar, 2019",
-    "Bruce Springsteen",
-    "Long Branch, NJ",
-    "VISA ⠀•••• 5919",
-    212.79
-  ),
-];
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
 function StoreAdmin() {
   const products = useSelector((state) => state.products).map((p) => {
     return { Id: p.sku, Name: p.name };
-  });
+  }, shallowEqual);
+  const orders = useSelector((state) => state.global.dash.orders, shallowEqual);
   const show = useSelector((state) => state.global.dash.productModal);
   const selectedIndex = useSelector(
     (state) => state.global.dash.selectedProduct
@@ -107,6 +63,17 @@ function StoreAdmin() {
     dispatch(selectProduct(products[i].Id));
     dispatch(showDashProductModal(true));
   };
+
+  axios.get("/order").then((o) => {
+    o.data = o.data.filter(
+      (z) => orders.findIndex((s) => s.cid === z.cid) === -1
+    );
+    if (o.data.length > 0) dispatch(addOrders(o.data));
+  });
+
+  orders.forEach(
+    (o) => delete o.processing && delete o.line1 && delete o.finalized
+  );
 
   return (
     <>
@@ -152,7 +119,7 @@ function StoreAdmin() {
         <Grid item xs={12}>
           <Widget
             name="Recent Orders"
-            list={rows}
+            list={orders}
             Content={ProductPage}
             buttonText="See more orders"
           />

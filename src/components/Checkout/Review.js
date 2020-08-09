@@ -43,7 +43,7 @@ export default function Review() {
 
   return (
     <>
-      <form action="/create_payment" method="post" id="paypalForm">
+      <form action="/payment" method="post" id="paypalForm">
         <input type="hidden" id="cart" name="cart" />
       </form>
       <Typography variant="h6" gutterBottom>

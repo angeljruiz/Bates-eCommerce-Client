@@ -21,3 +21,11 @@ export const selectProductThumb = (id) => {
     id,
   };
 };
+
+export const addOrders = (orders) => {
+  return {
+    type: "ADD_ORDERS",
+    reducer: "dash",
+    orders,
+  };
+};

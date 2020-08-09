@@ -1,6 +1,6 @@
-import dashReducer from "./dashReducer";
+import dashReducer, { defaultDashState } from "./dashReducer";
 
-const defaultState = { dash: { productModal: false, selectedProduct: null } };
+export const defaultState = { dash: { ...defaultDashState } };
 
 export default (state = defaultState, action) => {
   switch (action.reducer) {

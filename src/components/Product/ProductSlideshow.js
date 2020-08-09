@@ -37,9 +37,6 @@ const useStyles = makeStyles((theme) => {
     selected: {
       border: `3px solid ${theme.palette.primary.dark}`,
     },
-    uploadButton: {
-      marginRight: theme.spacing(2),
-    },
   };
 });
 
@@ -87,7 +84,7 @@ const ProductSlideshow = ({ id }) => {
               {name}
             </Typography>
           </div>
-          <Avatar className={classes.avatar} />
+          <Avatar className={classes.avatar} src={(images[0] || {}).url} />
         </div>
         <Grid container direction="row" spacing={2}>
           {id &&
@@ -113,12 +110,7 @@ const ProductSlideshow = ({ id }) => {
       <Divider />
       <CardActions>
         {id && (
-          <Button
-            className={classes.uploadButton}
-            color="primary"
-            variant="text"
-            component="label"
-          >
+          <Button color="primary" variant="text" component="label">
             Upload picture
             <input
               type="file"
@@ -127,8 +119,13 @@ const ProductSlideshow = ({ id }) => {
             />
           </Button>
         )}
-        {Number.isInteger(selectedThumb) && (
+        {/* {Number.isInteger(selectedThumb) && (
           <Button onClick={handleRemove} variant="text">
+            Make main picture
+          </Button>
+        )} */}
+        {Number.isInteger(selectedThumb) && (
+          <Button onClick={handleRemove} color="secondary" variant="text">
             Remove picture
           </Button>
         )}

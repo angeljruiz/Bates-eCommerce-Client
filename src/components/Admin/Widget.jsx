@@ -58,6 +58,11 @@ function adjustTitle(title) {
   return result.charAt(0).toUpperCase() + result.slice(1);
 }
 
+function adjustData(data) {
+  if (typeof data === "boolean") return String(data);
+  return data;
+}
+
 export default function Widget({
   name,
   list,
@@ -99,7 +104,7 @@ export default function Widget({
                       align={i === self.length - 1 ? "right" : "inherit"}
                       key={i}
                     >
-                      {l[k]}
+                      {adjustData(l[k])}
                     </TableCell>
                   ))}
                 </TableRow>
