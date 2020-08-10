@@ -1,11 +1,15 @@
 import React from "react";
-import { Grid, makeStyles, Container } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 
 import { ProductDetails, ProductSlideshow } from "./";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(4),
+    paddingTop: theme.spacing(4),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+    justifyContent: "center",
   },
 }));
 
@@ -13,16 +17,24 @@ const ProductPage = ({ id }) => {
   const classes = useStyles();
 
   return (
-    <Container className={classes.root}>
-      <Grid container spacing={4}>
+    <Grid
+      container
+      className={classes.root}
+      spacing={2}
+      style={{
+        margin: 0,
+        width: "100%",
+      }}
+    >
+      {id && (
         <Grid item md={6} xs={12}>
           <ProductSlideshow id={id} />
         </Grid>
-        <Grid item md={6} xs={12}>
-          <ProductDetails id={id} />
-        </Grid>
+      )}
+      <Grid item md={6} xs={12}>
+        <ProductDetails id={id} />
       </Grid>
-    </Container>
+    </Grid>
   );
 };
 

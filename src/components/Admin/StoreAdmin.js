@@ -1,13 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import {
-  Typography,
-  makeStyles,
-  Grid,
-  Hidden,
-  Fab,
-  Modal,
-} from "@material-ui/core";
+import { Typography, makeStyles, Grid, Fab, Modal } from "@material-ui/core";
 
 import {
   showDashProductModal,
@@ -33,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
   fab: {
     position: "fixed",
     right: theme.spacing(1),
-    bottom: theme.spacing(2),
   },
 
   toolbar: theme.mixins.toolbar,
@@ -71,9 +63,9 @@ function StoreAdmin() {
     if (o.data.length > 0) dispatch(addOrders(o.data));
   });
 
-  orders.forEach(
-    (o) => delete o.processing && delete o.line1 && delete o.finalized
-  );
+  orders.forEach((o) => {
+    delete o.processing && delete o.line1 && delete o.finalized;
+  });
 
   return (
     <>
@@ -87,16 +79,14 @@ function StoreAdmin() {
       >
         <>
           <div className={classes.toolbar} />
+          <Fab
+            color="secondary"
+            className={classes.fab}
+            onClick={() => modalButton(false)}
+          >
+            <Typography className={classes.fabButton}>X</Typography>
+          </Fab>
           <ProductPage id={selectedIndex} />
-          <Hidden mdUp>
-            <Fab
-              color="secondary"
-              className={classes.fab}
-              onClick={() => modalButton(false)}
-            >
-              <Typography className={classes.fabButton}>X</Typography>
-            </Fab>
-          </Hidden>
         </>
       </Modal>
       <Grid container>

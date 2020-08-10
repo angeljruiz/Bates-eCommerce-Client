@@ -87,38 +87,35 @@ const ProductSlideshow = ({ id }) => {
           <Avatar className={classes.avatar} src={(images[0] || {}).url} />
         </div>
         <Grid container direction="row" spacing={2}>
-          {id &&
-            images.map((image, i) => {
-              return (
-                <Grid item xs={6} key={i}>
-                  <Avatar
-                    className={`${classes.card} ${
-                      selectedThumb === i ? classes.selected : ""
-                    }`}
-                    id={`product-thumb-${i}`}
-                    onClick={() => selectThumb(i)}
-                    variant="rounded"
-                    src={image.url}
-                  >
-                    {""}
-                  </Avatar>
-                </Grid>
-              );
-            })}
+          {images.map((image, i) => {
+            return (
+              <Grid item xs={6} md={4} key={i}>
+                <Avatar
+                  className={`${classes.card} ${
+                    selectedThumb === i ? classes.selected : ""
+                  }`}
+                  id={`product-thumb-${i}`}
+                  onClick={() => selectThumb(i)}
+                  variant="rounded"
+                  src={image.url}
+                >
+                  {""}
+                </Avatar>
+              </Grid>
+            );
+          })}
         </Grid>
       </CardContent>
       <Divider />
       <CardActions>
-        {id && (
-          <Button color="primary" variant="text" component="label">
-            Upload picture
-            <input
-              type="file"
-              onChange={handleUpload}
-              style={{ display: "none" }}
-            />
-          </Button>
-        )}
+        <Button color="primary" variant="text" component="label">
+          Upload picture
+          <input
+            type="file"
+            onChange={handleUpload}
+            style={{ display: "none" }}
+          />
+        </Button>
         {/* {Number.isInteger(selectedThumb) && (
           <Button onClick={handleRemove} variant="text">
             Make main picture

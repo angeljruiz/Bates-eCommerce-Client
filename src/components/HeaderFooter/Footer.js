@@ -35,7 +35,7 @@ export default () => {
     <AppBar position="static" className={classes.appBar} component="footer">
       <Toolbar>
         <Typography>
-          <strong>&copy; 2017 RB Implementations</strong>
+          <strong>&copy; 2017 RB Implementations LLC</strong>
         </Typography>
         <Box className={classes.buttonsContainer}>
           <IconButton size="small" aria-label="menu">

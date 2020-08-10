@@ -93,6 +93,7 @@ export default function Widget({
           </TableHead>
           <TableBody>
             {list.map((l, j) => {
+              if (j >= 10) return;
               return (
                 <TableRow
                   onClick={() => (action ? action(j) : "")}
