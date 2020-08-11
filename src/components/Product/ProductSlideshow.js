@@ -84,7 +84,9 @@ const ProductSlideshow = ({ id }) => {
               {name}
             </Typography>
           </div>
-          <Avatar className={classes.avatar} src={(images[0] || {}).url} />
+          {images && (
+            <Avatar className={classes.avatar} src={(images[0] || {}).url} />
+          )}
         </div>
         <Grid container direction="row" spacing={2}>
           {images.map((image, i) => {
