@@ -89,23 +89,24 @@ const ProductSlideshow = ({ id }) => {
           )}
         </div>
         <Grid container direction="row" spacing={2}>
-          {images.map((image, i) => {
-            return (
-              <Grid item xs={6} md={4} key={i}>
-                <Avatar
-                  className={`${classes.card} ${
-                    selectedThumb === i ? classes.selected : ""
-                  }`}
-                  id={`product-thumb-${i}`}
-                  onClick={() => selectThumb(i)}
-                  variant="rounded"
-                  src={image.url}
-                >
-                  {""}
-                </Avatar>
-              </Grid>
-            );
-          })}
+          {images &&
+            images.map((image, i) => {
+              return (
+                <Grid item xs={6} md={4} key={i}>
+                  <Avatar
+                    className={`${classes.card} ${
+                      selectedThumb === i ? classes.selected : ""
+                    }`}
+                    id={`product-thumb-${i}`}
+                    onClick={() => selectThumb(i)}
+                    variant="rounded"
+                    src={image.url}
+                  >
+                    {""}
+                  </Avatar>
+                </Grid>
+              );
+            })}
         </Grid>
       </CardContent>
       <Divider />
