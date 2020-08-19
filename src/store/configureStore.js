@@ -1,10 +1,10 @@
 import { createStore, combineReducers } from "redux";
 
-import globalReducer from "../reducers/globalReducer";
-import productsReducer from "../reducers/productsReducer";
-import accountReducer from "../reducers/accountReducer";
-import cartReducer from "../reducers/cartReducer";
-import sidebarReducer from "../reducers/sidebarReducer";
+import globalReducer from "../reducers/global";
+import productsReducer from "../reducers/products";
+import accountReducer from "../reducers/account";
+import cartReducer from "../reducers/cart";
+import sidebarReducer from "../reducers/sidebar";
 
 export default () => {
   return createStore(

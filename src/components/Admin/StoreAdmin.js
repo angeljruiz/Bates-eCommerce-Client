@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { Typography, makeStyles, Grid, Fab, Modal } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 
 import {
   showDashProductModal,
@@ -12,25 +12,6 @@ import { ProductPage } from "../Product";
 import Widget from "./Widget";
 import axios from "axios";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    margin: theme.spacing(2),
-    padding: theme.spacing(2),
-  },
-
-  modal: {
-    marginTop: theme.spacing(2),
-    overflow: "scroll",
-  },
-
-  fab: {
-    position: "fixed",
-    right: theme.spacing(1),
-  },
-
-  toolbar: theme.mixins.toolbar,
-}));
-
 function StoreAdmin() {
   const products = useSelector((state) => state.products).map((p) => {
     return { Id: p.sku, Name: p.name };
@@ -41,7 +22,6 @@ function StoreAdmin() {
     (state) => state.global.dash.selectedProduct
   );
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   const modalButton = (show) => {
     if (!show) {
@@ -69,26 +49,6 @@ function StoreAdmin() {
 
   return (
     <>
-      <Modal
-        open={show}
-        onClose={() => modalButton(false)}
-        onEscapeKeyDown={() => modalButton(false)}
-        aria-labelledby="simple-modal"
-        aria-describedby="simple-modal"
-        className={classes.modal}
-      >
-        <>
-          <div className={classes.toolbar} />
-          <Fab
-            color="secondary"
-            className={classes.fab}
-            onClick={() => modalButton(false)}
-          >
-            <Typography className={classes.fabButton}>X</Typography>
-          </Fab>
-          <ProductPage id={selectedIndex} />
-        </>
-      </Modal>
       <Grid container>
         <Grid item xs={12} md={4}>
           <Widget
@@ -97,6 +57,10 @@ function StoreAdmin() {
             action={selectItem}
             buttonAction={() => modalButton(true)}
             buttonText="Add a Product"
+            modalHandler={modalButton}
+            ModalPage={ProductPage}
+            show={show}
+            modalProps={{ id: selectedIndex }}
           />
         </Grid>
         <Grid item xs={12} md={4}>

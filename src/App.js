@@ -38,8 +38,6 @@ if (token) {
 class App extends React.Component {
   componentDidMount() {
     axios.get("/account").then((res) => {
-      console.log(res.data);
-      console.log(localStorage.getItem("token"));
       this.props.dispatch(init(res.data));
     });
     fetch("/product").then(async (products) => {

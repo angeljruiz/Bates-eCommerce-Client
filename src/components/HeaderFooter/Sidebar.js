@@ -11,6 +11,7 @@ import {
   useTheme,
   ListItemAvatar,
   Avatar,
+  Divider,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -142,15 +143,15 @@ function Sidebar() {
             <ListItemText primary="Logout" />
           </ListItemButton>
         )}
-
-        {/* <ListItemButton onClick={() => followLink("/support")}>
+        <Divider />
+        <ListItemButton onClick={() => followLink("/")}>
           <ListItemAvatar>
             <Avatar>
-              <FontAwesomeIcon icon={faTicketAlt} />
+              <FontAwesomeIcon />
             </Avatar>
           </ListItemAvatar>
-          <ListItemText primary="Support" />
-        </ListItemButton> */}
+          <ListItemText primary="Featured" />
+        </ListItemButton>
       </List>
     </>
   );

@@ -9,6 +9,8 @@ import {
   TableBody,
   Button,
   Typography,
+  Modal,
+  Fab,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -32,14 +34,13 @@ const useStyles = makeStyles((theme) => ({
     outline: 0,
   },
 
-  fab: {
-    position: "fixed",
-    bottom: theme.spacing(2),
-    right: theme.spacing(1),
-  },
-
   fabButton: {
     fontWeight: "bolder",
+  },
+
+  fab: {
+    position: "fixed",
+    right: theme.spacing(1),
   },
 
   toolbar: theme.mixins.toolbar,
@@ -69,6 +70,10 @@ export default function Widget({
   action,
   buttonAction,
   buttonText,
+  show,
+  modalHandler,
+  ModalPage,
+  modalProps,
 }) {
   const classes = useStyles();
 
@@ -76,6 +81,26 @@ export default function Widget({
 
   return (
     <>
+      <Modal
+        open={show}
+        onClose={() => modalHandler(false)}
+        onEscapeKeyDown={() => modalHandler(false)}
+        aria-labelledby="simple-modal"
+        aria-describedby="simple-modal"
+        className={classes.modal}
+      >
+        <>
+          <div className={classes.toolbar} />
+          <Fab
+            color="secondary"
+            className={classes.fab}
+            onClick={() => modalHandler(false)}
+          >
+            <Typography className={classes.fabButton}>X</Typography>
+          </Fab>
+          <ModalPage {...modalProps} />
+        </>
+      </Modal>
       <Paper className={classes.root}>
         <Title>{name}</Title>
         <Table size="small">

@@ -11,6 +11,7 @@ import {
   Paper,
 } from "@material-ui/core";
 import axios from "axios";
+import GoogleLogin from "react-google-login";
 
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { Formik, Form, Field } from "formik";
@@ -35,7 +36,18 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 1),
+  },
+
+  facebook: {
+    backgroundColor: "rgb(51, 120, 234)",
+    color: "white",
+    marginBottom: theme.spacing(1),
+  },
+  google: {
+    backgroundColor: "rgb(210, 78, 62)",
+    color: "white",
+    marginBottom: theme.spacing(1),
   },
 }));
 
@@ -52,6 +64,20 @@ export default function LoginDashboard() {
       dispatch(init({ email: body.email }));
       history.push("/");
     });
+  };
+
+  const handleGoogle = (res) => {
+    const google = {
+      username: res.profileObj.name,
+      email: res.profileObj.email,
+      id: res.googleId,
+    };
+    axios.post("/oauth", google);
+    const bearer = "Bearer " + google.id;
+    axios.defaults.headers.common["Authorization"] = bearer;
+    localStorage.setItem("token", bearer);
+    dispatch(init({ email: google.email }));
+    history.push("/");
   };
 
   return (
@@ -120,6 +146,21 @@ export default function LoginDashboard() {
               >
                 Login
               </Button>
+              <GoogleLogin
+                clientId="1071517499996-t319p34m8es21hn9mrj2bmnrg8ck8j77.apps.googleusercontent.com"
+                render={(renderProps) => (
+                  <Button
+                    onClick={renderProps.onClick}
+                    fullWidth
+                    className={classes.google}
+                    variant="contained"
+                  >
+                    Google
+                  </Button>
+                )}
+                onSuccess={handleGoogle}
+                onFailure={handleGoogle}
+              ></GoogleLogin>
               <Grid container justify="flex-end">
                 {/* <Grid item xs>
               <Link href="#" variant="body2">

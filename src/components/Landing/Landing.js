@@ -57,7 +57,6 @@ function Landing() {
         container
         direction="row"
         justify="space-around"
-        // spacing={2}
         className={classes.container}
       >
         {products.map((product, i) => (

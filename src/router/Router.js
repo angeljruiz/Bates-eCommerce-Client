@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import axios from "axios";
 
 import Layout from "../layout/Layout";
 import ScrollToTop from "../layout/ScrollToTop";
