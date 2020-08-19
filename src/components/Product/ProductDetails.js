@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { makeStyles } from "@material-ui/styles";
 import {
   Card,
@@ -35,7 +35,10 @@ const validationSchema = Yup.object().shape({
 
 const ProductDetails = ({ id }) => {
   const product =
-    useSelector((state) => state.products.find((p) => p.sku === id)) || {};
+    useSelector(
+      (state) => state.products.find((p) => p.sku === id),
+      shallowEqual
+    ) || {};
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -47,7 +50,7 @@ const ProductDetails = ({ id }) => {
       },
       body: JSON.stringify(body),
     });
-    dispatch(addProduct([body]));
+    dispatch(addProduct(body));
     dispatch(selectProduct(body.sku));
   };
 

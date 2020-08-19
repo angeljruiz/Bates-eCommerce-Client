@@ -9,6 +9,7 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
+import axios from "axios";
 
 import Router from "./router/Router";
 import { init } from "./actions/accountActions";
@@ -25,8 +26,22 @@ library.add(
   faGithub
 );
 
+let token = localStorage.getItem("token");
+if (token) {
+  axios.defaults.withCredentials = true;
+  axios.defaults.credentials = "include";
+  axios.defaults.headers.common["Authorization"] = token;
+} else {
+  axios.defaults.headers.common["Authorization"] = null;
+}
+
 class App extends React.Component {
   componentDidMount() {
+    axios.get("/account").then((res) => {
+      console.log(res.data);
+      console.log(localStorage.getItem("token"));
+      this.props.dispatch(init(res.data));
+    });
     fetch("/product").then(async (products) => {
       products = await products.json();
       products = products.filter(
@@ -46,11 +61,6 @@ class App extends React.Component {
       });
       if (products.length > 0) this.props.dispatch(addProduct(products));
     });
-    fetch("/isLogged")
-      .then((data) => data.json())
-      .then((data) => {
-        this.props.dispatch(init(data));
-      });
   }
   render() {
     return (

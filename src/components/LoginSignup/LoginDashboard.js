@@ -1,20 +1,22 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import {
   Container,
   Avatar,
   Typography,
-  TextField,
-  FormControlLabel,
   Button,
   Grid,
-  Checkbox,
   makeStyles,
   Paper,
 } from "@material-ui/core";
+import axios from "axios";
 
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { Formik, Form, Field } from "formik";
+import { TextField, CheckboxWithLabel } from "formik-material-ui";
+import { useDispatch } from "react-redux";
+import { init } from "../../actions/accountActions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -39,65 +41,101 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginDashboard() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const handleLogin = (body) => {
+    axios.post("/login", body).then(({ data: { token } }) => {
+      const bearer = "Bearer " + token;
+      axios.defaults.headers.common["Authorization"] = bearer;
+      localStorage.setItem("token", bearer);
+      dispatch(init({ email: body.email }));
+      history.push("/");
+    });
+  };
+
   return (
-    <Container maxWidth="xs">
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-          <Grid container justify="flex-end">
-            {/* <Grid item xs>
+    <Formik
+      initialValues={{
+        email: "",
+        password: "",
+      }}
+      onSubmit={handleLogin}
+    >
+      {() => (
+        <Form>
+          <Container maxWidth="xs">
+            <Paper className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Login
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    type="email"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    component={CheckboxWithLabel}
+                    name="rm"
+                    color="primary"
+                    type="checkbox"
+                    Label={{
+                      label: "Remember Me",
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Login
+              </Button>
+              <Grid container justify="flex-end">
+                {/* <Grid item xs>
               <Link href="#" variant="body2">
                 Forgot password?
               </Link>
             </Grid> */}
-            <Grid item>
-              <Link to="/signup" variant="body2">
-                Don't have an account? Sign Up
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </Paper>
-    </Container>
+                <Grid item>
+                  <Link to="/signup" variant="body2">
+                    Don't have an account? Sign Up
+                  </Link>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Container>
+        </Form>
+      )}
+    </Formik>
   );
 }

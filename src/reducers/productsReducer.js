@@ -5,6 +5,9 @@ export default (state = productsDefaultState, action) => {
   switch (action.type) {
     case "ADD_PRODUCTS":
       return [...state, ...action.products];
+    case "EDIT_PRODUCT":
+      t = state.find((p) => p.sku === action.product);
+      return [...state, ...t];
     case "ADD_IMAGE":
       t = state.find((p) => p.sku === action.id);
       t.images.push(action.image);

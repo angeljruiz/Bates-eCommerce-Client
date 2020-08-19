@@ -1,6 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import axios from "axios";
 
 import Layout from "../layout/Layout";
 import ScrollToTop from "../layout/ScrollToTop";
@@ -13,38 +13,22 @@ import LoginDashboard from "../components/LoginSignup/LoginDashboard";
 import SignupDashboard from "../components/LoginSignup/SignupDashboard";
 import ProductPage from "../components/Product/ProductPage";
 
-function Router(props) {
+function Router() {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Layout>
         <Switch>
-          <Route
-            path="/"
-            exact
-            component={LandingPage}
-            // products={props.products}
-          />
+          <Route path="/" exact component={LandingPage} />
           <Route path="/admin" exact component={SuperAdmin} />
           <Route path="/storeadmin" exact component={StoreAdmin} />
           <Route path="/checkout/:id?" component={Checkout} />
           <Route path="/login" exact component={LoginDashboard} />
           <Route path="/signup" exact component={SignupDashboard} />
-          <Route
-            path="/product/:sku"
-            exact
-            component={ProductPage}
-            dispatch={props.dispatch}
-          />
+          <Route path="/product/:sku" exact component={ProductPage} />
         </Switch>
       </Layout>
     </BrowserRouter>
   );
 }
-
-Router.propTypes = {
-  products: PropTypes.array,
-  cart: PropTypes.object,
-};
-
 export default Router;

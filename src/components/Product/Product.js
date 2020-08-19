@@ -13,7 +13,6 @@ import {
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 
 import { addProductCart } from "../../actions/cartActions";
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -29,7 +28,6 @@ function Product({ sku }) {
     (state) => state.products.find((p) => p.sku === sku),
     shallowEqual
   );
-  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
 

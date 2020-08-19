@@ -5,6 +5,13 @@ export const addProduct = (products) => {
   };
 };
 
+export const editProduct = (product) => {
+  return {
+    type: "EDIT_PRODUCT",
+    product,
+  };
+};
+
 export const addImage = (id, image) => {
   return {
     type: "ADD_IMAGE",

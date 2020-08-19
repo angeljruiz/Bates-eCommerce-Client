@@ -13,13 +13,12 @@ import {
   Avatar,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
-// import LockIcon from "@material-ui/icons/Lock";
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { showSidebar } from "../../actions/sidebarActions";
 import { showCart } from "../../actions/cartActions";
 import dStyle from "../../style/style";
+import { logout as log } from "../../actions/accountActions";
 
 function ListItemButton(props) {
   return <ListItem button component="button" {...props} />;
@@ -59,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Sidebar() {
+  const account = useSelector((state) => state.account);
   const show = useSelector((state) => state.sidebar.show);
   const cart = useSelector((state) => state.cart.show);
   const location = useLocation();
@@ -74,6 +74,11 @@ function Sidebar() {
   const followLink = (link) => {
     dispatch(showSidebar(false));
     history.push(link);
+  };
+
+  const logout = () => {
+    localStorage.setItem("token", null);
+    dispatch(log());
   };
 
   if (cart && show) {
@@ -104,17 +109,6 @@ function Sidebar() {
           <ListItemText primary="Admin" />
         </ListItemButton> */}
         <ListItemButton
-          selected={location.pathname === "/login"}
-          onClick={() => followLink("/login")}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <FontAwesomeIcon icon="sign-in-alt" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Login" />
-        </ListItemButton>
-        <ListItemButton
           selected={location.pathname === "/storeadmin"}
           onClick={() => followLink("/storeadmin")}
         >
@@ -125,18 +119,30 @@ function Sidebar() {
           </ListItemAvatar>
           <ListItemText primary="Dashboard" />
         </ListItemButton>
+        {!account.email && (
+          <ListItemButton
+            selected={location.pathname === "/login"}
+            onClick={() => followLink("/login")}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <FontAwesomeIcon icon="sign-in-alt" />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Login" />
+          </ListItemButton>
+        )}
+        {account.email && (
+          <ListItemButton onClick={logout}>
+            <ListItemAvatar>
+              <Avatar>
+                <FontAwesomeIcon icon="sign-out-alt" />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        )}
 
-        <ListItemButton
-          selected={location.pathname === "/signup"}
-          onClick={() => followLink("/signup")}
-        >
-          <ListItemAvatar>
-            <Avatar>
-              <FontAwesomeIcon icon={faUserPlus} />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Sign up" />
-        </ListItemButton>
         {/* <ListItemButton onClick={() => followLink("/support")}>
           <ListItemAvatar>
             <Avatar>

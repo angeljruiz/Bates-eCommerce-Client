@@ -2,7 +2,7 @@ import React from "react";
 import { useFormikContext } from "formik";
 
 import ErrorMessage from "./ErrorMessage";
-import { TextField, Input } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 
 function AppFormField({ name, type = "text", label, ...otherProps }) {
   const { setFieldTouched, handleChange, errors, touched } = useFormikContext();

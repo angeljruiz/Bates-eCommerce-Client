@@ -1,19 +1,21 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   Container,
   Avatar,
   Typography,
   Grid,
-  TextField,
-  FormControlLabel,
-  Checkbox,
   Button,
   makeStyles,
   Paper,
 } from "@material-ui/core";
+import axios from "axios";
 
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { Form, Field, Formik } from "formik";
+import { TextField, CheckboxWithLabel } from "formik-material-ui";
+import { useDispatch } from "react-redux";
+import { init } from "../../actions/accountActions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -38,98 +40,133 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignupDashboard() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const handleSignup = (body) => {
+    axios.post("/signup", body).then(({ data: { token } }) => {
+      const bearer = "Bearer " + token;
+      axios.defaults.headers.common["Authorization"] = bearer;
+      localStorage.setItem("token", bearer);
+      dispatch(init({ email: body.email }));
+      history.push("/");
+    });
+  };
 
   return (
-    <Container maxWidth="xs">
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <form className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
+    <Formik
+      initialValues={{
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+      }}
+      onSubmit={handleSignup}
+    >
+      {() => (
+        <Form>
+          <Container maxWidth="xs">
+            <Paper className={classes.paper}>
+              <Avatar className={classes.avatar}>
+                <LockOutlinedIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign up
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <Field
+                    component={TextField}
+                    autoComplete="fname"
+                    name="firstName"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Field
+                    component={TextField}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="lname"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    type="email"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    component={CheckboxWithLabel}
+                    required
+                    name="tos"
+                    color="primary"
+                    type="checkbox"
+                    Label={{
+                      label: (
+                        <>
+                          <Typography style={{ display: "inline" }}>
+                            I agree to the
+                          </Typography>
+                          <Button href="#" color="primary">
+                            terms of use.
+                          </Button>
+                        </>
+                      ),
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
                 fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label={
-                  <>
-                    <Typography style={{ display: "inline" }}>
-                      I agree to the
-                    </Typography>
-                    <Button href="#" color="primary">
-                      terms of use.
-                    </Button>
-                  </>
-                }
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link to="/login" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
-      </Paper>
-    </Container>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
+              <Grid container justify="flex-end">
+                <Grid item>
+                  <Link to="/login" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Container>
+        </Form>
+      )}
+    </Formik>
   );
 }
