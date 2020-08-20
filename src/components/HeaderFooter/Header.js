@@ -53,7 +53,7 @@ function Header({ width }) {
         >
           <p className="brand">BE</p>
         </IconButton>
-        <div className="brand" />
+        <div className="flex" />
         <IconButton
           color="inherit"
           edge="end"

@@ -53,65 +53,66 @@ const ProductSlideshowv2 = ({ id }) => {
   };
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <Grid container direction="row" spacing={1}>
-          <Grid item xs={12}>
-            {(images || {}).length > 1 && (
-              <img
-                id="mainImg"
-                src={images[selectedThumb].url}
-                style={{
-                  width: "100%",
-                  maxHeight: "80vh",
-                  objectFit: "contain",
-                }}
-                alt="Current"
-              />
-            )}
+    <>
+      {images && (
+        <Card className={classes.root}>
+          <CardContent>
+            <Grid container direction="row" spacing={1}>
+              <Grid item xs={12}>
+                <img
+                  id="mainImg"
+                  src={images[selectedThumb].url}
+                  style={{
+                    width: "100%",
+                    maxHeight: "80vh",
+                    objectFit: "contain",
+                  }}
+                  alt="Current"
+                />
 
-            {(images || {}).length > 1 && (
-              <div style={{ position: "relative", top: "-50%" }}>
-                <div style={{ display: "flex" }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => updateThumb(selectedThumb + 1)}
-                  >
-                    {"<"}
-                  </Button>
-                  <div className="flex" />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => updateThumb(selectedThumb - 1)}
-                  >
-                    {">"}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </Grid>
-          {images &&
-            images.length > 1 &&
-            images.map((image, i) => {
-              return (
-                <Grid item xs={4} key={i}>
-                  <Avatar
-                    className={`${classes.card} ${
-                      selectedThumb === i ? classes.selected : ""
-                    }`}
-                    id={`product-thumb-${i}`}
-                    variant="rounded"
-                    src={image.url}
-                    onClick={() => setThumb(i)}
-                  ></Avatar>
-                </Grid>
-              );
-            })}
-        </Grid>
-      </CardContent>
-    </Card>
+                {images.length > 1 && (
+                  <div style={{ position: "relative", top: "-50%" }}>
+                    <div style={{ display: "flex" }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => updateThumb(selectedThumb + 1)}
+                      >
+                        {"<"}
+                      </Button>
+                      <div className="flex" />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => updateThumb(selectedThumb - 1)}
+                      >
+                        {">"}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </Grid>
+              {images.length > 1 &&
+                images.map((image, i) => {
+                  return (
+                    <Grid item xs={4} key={i}>
+                      <Avatar
+                        className={`${classes.card} ${
+                          selectedThumb === i ? classes.selected : ""
+                        }`}
+                        id={`product-thumb-${i}`}
+                        variant="rounded"
+                        src={image.url}
+                        onClick={() => setThumb(i)}
+                      ></Avatar>
+                    </Grid>
+                  );
+                })}
+            </Grid>
+          </CardContent>
+        </Card>
+      )}
+    </>
   );
 };
 
