@@ -7,7 +7,6 @@ import {
   IconButton,
   makeStyles,
   Typography,
-  Box,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -17,11 +16,6 @@ const useStyles = makeStyles((theme) => ({
     bottom: 0,
     left: 0,
     top: "auto",
-  },
-
-  buttonsContainer: {
-    position: "absolute",
-    right: theme.spacing(1),
   },
 
   buttons: {
@@ -37,25 +31,24 @@ export default () => {
         <Typography>
           <strong>&copy; 2017 RB Implementations LLC</strong>
         </Typography>
-        <Box className={classes.buttonsContainer}>
-          <IconButton size="small" aria-label="menu">
-            <a
-              href="https://www.linkedin.com/in/angel-ruiz-bates-1b68a2142/"
-              className={classes.buttons}
-            >
-              <FontAwesomeIcon
-                icon={["fab", "linkedin"]}
-                size="lg"
-                className="mr-2"
-              />
-            </a>
-          </IconButton>
-          <IconButton size="small" aria-label="menu">
-            <a href="https://github.com/angeljruiz" className={classes.buttons}>
-              <FontAwesomeIcon icon={["fab", "github"]} size="lg" />
-            </a>
-          </IconButton>
-        </Box>
+        <div className="flex" />
+        <IconButton size="small" aria-label="menu">
+          <a
+            href="https://www.linkedin.com/in/angel-ruiz-bates-1b68a2142/"
+            className={classes.buttons}
+          >
+            <FontAwesomeIcon
+              icon={["fab", "linkedin"]}
+              size="lg"
+              className="mr-2"
+            />
+          </a>
+        </IconButton>
+        <IconButton size="small" aria-label="menu">
+          <a href="https://github.com/angeljruiz" className={classes.buttons}>
+            <FontAwesomeIcon icon={["fab", "github"]} size="lg" />
+          </a>
+        </IconButton>
       </Toolbar>
     </AppBar>
   );
