@@ -12,6 +12,7 @@ import { ProductPage } from "../Product";
 import Section from "../Product/Section";
 import Widget from "./Widget";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 function StoreAdmin() {
   const products = useSelector((state) => state.products).map((p) => {
@@ -25,6 +26,7 @@ function StoreAdmin() {
   );
   const [showSections, setShowSections] = useState(false);
   const [sectionIndex, setSectionIndex] = useState(null);
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const modalButton = (show) => {
@@ -96,9 +98,11 @@ function StoreAdmin() {
             name="Recent Orders"
             list={orders}
             Content={ProductPage}
+            action={(i) => history.push(`/orders/${orders[i].cid}`)}
             buttonText="See more orders"
             ModalPage={ProductPage}
             show={false}
+            modalHandler={() => history.push("/orders")}
           />
         </Grid>
       </Grid>
