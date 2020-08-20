@@ -16,6 +16,7 @@ import { init } from "./actions/accountActions";
 import { addProduct } from "./actions/productsActions";
 
 import "./App.scss";
+import { addSection } from "./actions/globalActions";
 
 library.add(
   faSignInAlt,
@@ -59,25 +60,25 @@ class App extends React.Component {
       });
       if (products.length > 0) this.props.dispatch(addProduct(products));
     });
+    axios.get("/sections").then((res) => {
+      res.data.forEach((section) => {
+        this.props.dispatch(addSection(section));
+      });
+    });
   }
   render() {
     return (
       <>
         <CssBaseline />
-        <Router
-          products={this.props.products}
-          cart={this.props.cart}
-          dispatch={this.props.dispatch}
-        />
+        <Router />
       </>
     );
   }
 }
 
-const mapStateToProps = ({ products, cart }) => {
+const mapStateToProps = ({ products }) => {
   return {
     products,
-    cart,
   };
 };
 

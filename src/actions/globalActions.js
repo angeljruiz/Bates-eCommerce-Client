@@ -29,3 +29,11 @@ export const addOrders = (orders) => {
     orders,
   };
 };
+
+export const addSection = (section) => {
+  return {
+    type: "ADD_SECTION",
+    reducer: "sections",
+    section,
+  };
+};

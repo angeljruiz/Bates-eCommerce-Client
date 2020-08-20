@@ -3,7 +3,7 @@ import sectionsReducer, { defaultSectionsState } from "./sections";
 
 export const defaultState = {
   dash: { ...defaultDashState },
-  sections: { ...defaultSectionsState },
+  sections: [...defaultSectionsState],
 };
 
 export default (state = defaultState, action) => {

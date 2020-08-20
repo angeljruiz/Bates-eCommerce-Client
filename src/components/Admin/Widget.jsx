@@ -68,7 +68,6 @@ export default function Widget({
   name,
   list,
   action,
-  buttonAction,
   buttonText,
   show,
   modalHandler,
@@ -83,7 +82,10 @@ export default function Widget({
     <>
       <Modal
         open={show}
-        onClose={() => modalHandler(false)}
+        onClose={() => {
+          action(null);
+          modalHandler(false);
+        }}
         onEscapeKeyDown={() => modalHandler(false)}
         aria-labelledby="simple-modal"
         aria-describedby="simple-modal"
@@ -139,7 +141,7 @@ export default function Widget({
           </TableBody>
         </Table>
 
-        <Button onClick={buttonAction} color="primary">
+        <Button onClick={() => modalHandler(true)} color="primary">
           {buttonText}
         </Button>
       </Paper>
