@@ -1,5 +1,5 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -36,15 +36,30 @@ if (token) {
   axios.defaults.headers.common["Authorization"] = null;
 }
 
-class App extends React.Component {
-  componentDidMount() {
+export default function App() {
+  let p = useSelector((state) => state.products, shallowEqual);
+  const sections = useSelector((state) => state.global.sections, shallowEqual);
+  const dispatch = useDispatch();
+
+  if (!p) p = [];
+  if (!Array.isArray(p)) p = [p];
+
+  useEffect(() => {
     axios.get("/account").then((res) => {
-      this.props.dispatch(init(res.data));
+      dispatch(init(res.data));
+    });
+    axios.get("/sections").then((res) => {
+      res.data.filter(
+        (s) => sections.findIndex((sec) => sec.id === s.id) === -1
+      );
+      res.data.forEach((section) => {
+        dispatch(addSection(section));
+      });
     });
     fetch("/product").then(async (products) => {
       products = await products.json();
       products = products.filter(
-        (p) => this.props.products.findIndex((s) => s.sku === p.sku) === -1
+        (pro) => p.findIndex((s) => s.sku === pro.sku) === -1
       );
       products.forEach((product) => {
         if (!product.images) {
@@ -58,28 +73,14 @@ class App extends React.Component {
           product.images = [product.images];
         }
       });
-      if (products.length > 0) this.props.dispatch(addProduct(products));
+      if (products.length > 0) dispatch(addProduct(products));
     });
-    axios.get("/sections").then((res) => {
-      res.data.forEach((section) => {
-        this.props.dispatch(addSection(section));
-      });
-    });
-  }
-  render() {
-    return (
-      <>
-        <CssBaseline />
-        <Router />
-      </>
-    );
-  }
+  }, []);
+
+  return (
+    <>
+      <CssBaseline />
+      <Router />
+    </>
+  );
 }
-
-const mapStateToProps = ({ products }) => {
-  return {
-    products,
-  };
-};
-
-export default connect(mapStateToProps)(App);

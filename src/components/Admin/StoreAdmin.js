@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Grid } from "@material-ui/core";
 
@@ -47,21 +47,22 @@ function StoreAdmin() {
     setShowSections(true);
   };
 
-  axios.get("/order").then((o) => {
-    o.data = o.data.filter(
-      (z) => orders.findIndex((s) => s.cid === z.cid) === -1
-    );
-    if (o.data.length > 0) dispatch(addOrders(o.data));
-  });
+  useEffect(() => {
+    axios.get("/order").then((o) => {
+      o.data = o.data.filter(
+        (z) => orders.findIndex((s) => s.cid === z.cid) === -1
+      );
+      if (o.data.length > 0) dispatch(addOrders(o.data));
+    });
 
-  orders.forEach((o) => {
-    delete o.processing && delete o.line1 && delete o.finalized;
-  });
+    orders.forEach((o) => {
+      delete o.processing && delete o.line1 && delete o.finalized;
+    });
 
-  sections.forEach((s) => {
-    // delete s.id;
-    delete s.store;
-  });
+    sections.forEach((s) => {
+      delete s.store;
+    });
+  }, []);
 
   return (
     <>

@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import {
   List,
   makeStyles,
@@ -12,11 +12,13 @@ import {
   ListItemAvatar,
   Avatar,
   Divider,
+  Container,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import { mdiRadioboxBlank } from "@mdi/js";
 import Icon from "@mdi/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AnchorLink from "react-anchor-link-smooth-scroll";
 
 import { showSidebar } from "../../actions/sidebarActions";
 import { showCart } from "../../actions/cartActions";
@@ -30,7 +32,6 @@ function ListItemButton(props) {
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    zIndex: 900,
   },
   drawer: {
     [theme.breakpoints.up("sm")]: {
@@ -58,9 +59,15 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+
+  links: {
+    color: "inherit",
+    textDecoration: "none",
+  },
 }));
 
 function Sidebar() {
+  const sections = useSelector((state) => state.global.sections, shallowEqual);
   const account = useSelector((state) => state.account);
   const show = useSelector((state) => state.sidebar.show);
   const cart = useSelector((state) => state.cart.show);
@@ -146,14 +153,19 @@ function Sidebar() {
           </ListItemButton>
         )}
         <Divider />
-        <ListItemButton onClick={() => followLink("/")}>
-          <ListItemAvatar>
-            <Avatar>
-              <Icon path={mdiRadioboxBlank} title="bullet" size={1} />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Featured" />
-        </ListItemButton>
+        {sections.map((section) => (
+          <ListItemButton
+            key={section.id}
+            onClick={() => followLink(`/#${section.name}`)}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <Icon path={mdiRadioboxBlank} size={1} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={section.name} />
+          </ListItemButton>
+        ))}
       </List>
     </>
   );

@@ -70,6 +70,7 @@ function Cart() {
           >
             Checkout
           </Button>
+          <div className={classes.toolbar} />
         </Box>
       </Modal>
     </>

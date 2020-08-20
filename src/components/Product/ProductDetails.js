@@ -1,6 +1,5 @@
 import React from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import { makeStyles } from "@material-ui/styles";
 import {
   Card,
   CardHeader,
@@ -8,20 +7,25 @@ import {
   CardActions,
   Divider,
   Grid,
+  makeStyles,
   Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
 } from "@material-ui/core";
 import * as Yup from "yup";
 
 import { deleteProduct, addProduct } from "../../actions/productsActions";
-import { AppForm, AppFormField } from "../Form";
-import SubmitButton from "../Form/SubmitButton";
 import {
   showDashProductModal,
   selectProduct,
 } from "../../actions/globalActions";
+import { Formik, Field, Form } from "formik";
+import { TextField, Select } from "formik-material-ui";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: { margin: "0 auto" },
+  margin: { marginTop: theme.spacing(2) },
 }));
 
 const validationSchema = Yup.object().shape({
@@ -39,10 +43,12 @@ const ProductDetails = ({ id }) => {
       (state) => state.products.find((p) => p.sku === id),
       shallowEqual
     ) || {};
+  const sections = useSelector((state) => state.global.sections, shallowEqual);
   const dispatch = useDispatch();
   const classes = useStyles();
 
   const handleSave = (body) => {
+    console.log("@@@@@@");
     fetch("/product", {
       method: id ? "PATCH" : "POST",
       headers: {
@@ -64,106 +70,117 @@ const ProductDetails = ({ id }) => {
 
   return (
     <Card className={classes.root}>
-      <AppForm
-        initialValues={{
-          sku: product.sku || "",
-          name: product.name || "",
-          price: product.price || "",
-          description: product.description || "",
-          quantity: product.quantity || "",
-          section: product.section || "",
-        }}
-        onSubmit={handleSave}
-        validationSchema={validationSchema}
-      >
-        <CardHeader title="Details" />
-        <Divider />
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
-              <AppFormField
-                fullWidth
-                label="SKU"
-                margin="dense"
-                name="sku"
-                required
-                type="number"
-                variant="outlined"
-                defaultValue={product.sku || ""}
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <AppFormField
-                fullWidth
-                label="Name"
-                margin="dense"
-                name="name"
-                required
-                variant="outlined"
-                defaultValue={product.name || ""}
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <AppFormField
-                fullWidth
-                label="Price"
-                margin="dense"
-                name="price"
-                required
-                type="number"
-                variant="outlined"
-                defaultValue={product.price || ""}
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <AppFormField
-                fullWidth
-                label="Description"
-                margin="dense"
-                name="description"
-                required
-                variant="outlined"
-                defaultValue={product.description || ""}
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <AppFormField
-                fullWidth
-                label="Quantity"
-                name="quantity"
-                type="number"
-                required
-                variant="outlined"
-                defaultValue={product.quantity || ""}
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <AppFormField
-                fullWidth
-                label="Section"
-                margin="dense"
-                name="section"
-                required
-                variant="outlined"
-                defaultValue={product.section || ""}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-        <CardActions>
-          <SubmitButton title="save" />
-          {id && (
-            <Button
-              onClick={() => handleDelete(id)}
-              color="secondary"
-              variant="contained"
-            >
-              Delete
-            </Button>
+      <CardHeader title="Details" />
+      <Divider />
+      <CardContent>
+        <Formik
+          initialValues={{
+            sku: product.sku || "",
+            name: product.name || "",
+            price: product.price || "",
+            description: product.description || "",
+            quantity: product.quantity || "",
+            section: product.section || "",
+          }}
+          onSubmit={handleSave}
+          validationSchema={validationSchema}
+        >
+          {() => (
+            <Form>
+              <Grid container spacing={3}>
+                <Grid item md={6} xs={12}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    label="SKU"
+                    name="sku"
+                    required
+                    type="number"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    label="Name"
+                    name="name"
+                    required
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    label="Price"
+                    name="price"
+                    required
+                    type="number"
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    label="Description"
+                    name="description"
+                    required
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <Field
+                    component={TextField}
+                    fullWidth
+                    label="Quantity"
+                    name="quantity"
+                    type="number"
+                    required
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <FormControl>
+                    <InputLabel htmlFor="section">Section</InputLabel>
+                    <Field
+                      component={Select}
+                      name="section"
+                      fullWidth
+                      inputProps={{
+                        id: "section",
+                      }}
+                    >
+                      {sections.map((section) => (
+                        <MenuItem key={section.id} value={section.id}>
+                          {section.name}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </FormControl>
+                  ;
+                </Grid>
+              </Grid>
+              <Divider className={classes.margin} />
+              <CardActions>
+                <Button type="submit" variant="contained" color="primary">
+                  Save
+                </Button>
+                {id && (
+                  <Button
+                    onClick={() => handleDelete(id)}
+                    color="secondary"
+                    variant="contained"
+                  >
+                    Delete
+                  </Button>
+                )}
+              </CardActions>
+            </Form>
           )}
-        </CardActions>
-      </AppForm>
+        </Formik>
+      </CardContent>
     </Card>
   );
 };
