@@ -142,7 +142,7 @@ const ProductDetails = ({ id }) => {
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <FormControl>
+                  <FormControl style={{ minWidth: 100 }}>
                     <InputLabel htmlFor="section">Section</InputLabel>
                     <Field
                       component={Select}
@@ -159,7 +159,6 @@ const ProductDetails = ({ id }) => {
                       ))}
                     </Field>
                   </FormControl>
-                  ;
                 </Grid>
               </Grid>
               <Divider className={classes.margin} />

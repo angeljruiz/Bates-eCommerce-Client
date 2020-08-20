@@ -13,6 +13,7 @@ import {
 import { shallowEqual, useSelector, useDispatch } from "react-redux";
 
 import { addProductCart } from "../../actions/cartActions";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -29,13 +30,14 @@ function Product({ sku }) {
     shallowEqual
   );
   const classes = useStyles();
+  const history = useHistory();
   const dispatch = useDispatch();
 
   return (
     <Card className={classes.card}>
       <CardActionArea
         disableRipple
-        // onClick={() => history.push(`/product/${product.sku}`)}
+        onClick={() => history.push(`/product/${product.sku}`)}
       >
         {product.image && (
           <CardMedia

@@ -19,8 +19,8 @@ function Router() {
       <Layout>
         <Switch>
           <Route path="/" exact component={LandingPage} />
-          <Route path="/admin" exact component={SuperAdmin} />
-          <Route path="/storeadmin" exact component={StoreAdmin} />
+          <Route path="/super" exact component={SuperAdmin} />
+          <Route path="/dash" exact component={StoreAdmin} />
           <Route path="/checkout/:id?" component={Checkout} />
           <Route path="/login" exact component={LoginDashboard} />
           <Route path="/signup" exact component={SignupDashboard} />

@@ -108,7 +108,7 @@ function Sidebar() {
           </ListItemAvatar>
           <ListItemText primary="Home" />
         </ListItemButton>
-        {/* <ListItemButton onClick={() => followLink("/storeadmin")}>
+        {/* <ListItemButton onClick={() => followLink("/dash")}>
           <ListItemAvatar>
             <Avatar>
               <LockIcon />
@@ -117,8 +117,8 @@ function Sidebar() {
           <ListItemText primary="Admin" />
         </ListItemButton> */}
         <ListItemButton
-          selected={location.pathname === "/storeadmin"}
-          onClick={() => followLink("/storeadmin")}
+          selected={location.pathname === "/dash"}
+          onClick={() => followLink("/dash")}
         >
           <ListItemAvatar>
             <Avatar>

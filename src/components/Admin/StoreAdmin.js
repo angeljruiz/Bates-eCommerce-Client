@@ -8,7 +8,7 @@ import {
   selectProductThumb,
   addOrders,
 } from "../../actions/globalActions";
-import { ProductPage } from "../Product";
+import { ProductModal } from "../Product";
 import Section from "../Product/Section";
 import Widget from "./Widget";
 import axios from "axios";
@@ -74,7 +74,7 @@ function StoreAdmin() {
             action={selectItem}
             buttonText="Add a Product"
             modalHandler={modalButton}
-            ModalPage={ProductPage}
+            ModalPage={ProductModal}
             show={show}
             modalProps={{ id: selectedIndex }}
           />
@@ -98,10 +98,10 @@ function StoreAdmin() {
           <Widget
             name="Recent Orders"
             list={orders}
-            Content={ProductPage}
+            Content={ProductModal}
             action={(i) => history.push(`/orders/${orders[i].cid}`)}
             buttonText="See more orders"
-            ModalPage={ProductPage}
+            ModalPage={ProductModal}
             show={false}
             modalHandler={() => history.push("/orders")}
           />
