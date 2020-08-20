@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
 import {
@@ -10,11 +10,12 @@ import {
   makeStyles,
   Paper,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import axios from "axios";
 import GoogleLogin from "react-google-login";
 
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { TextField, CheckboxWithLabel } from "formik-material-ui";
 import { useDispatch } from "react-redux";
 import { init } from "../../actions/accountActions";
@@ -49,21 +50,35 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     marginBottom: theme.spacing(1),
   },
+
+  alert: {
+    width: "100%",
+  },
 }));
 
 export default function LoginDashboard() {
+  const [error, setError] = useState();
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleLogin = (body) => {
-    axios.post("/login", body).then(({ data: { token } }) => {
-      const bearer = "Bearer " + token;
-      axios.defaults.headers.common["Authorization"] = bearer;
-      localStorage.setItem("token", bearer);
-      dispatch(init({ email: body.email }));
-      history.push("/");
-    });
+  const handleLogin = (body, { setSubmitting }) => {
+    axios
+      .post("/login", body)
+      .then(({ data: { token } }) => {
+        const bearer = "Bearer " + token;
+        axios.defaults.headers.common["Authorization"] = bearer;
+        localStorage.setItem("token", bearer);
+        dispatch(init({ email: body.email }));
+        history.push("/");
+      })
+      .catch(() => {
+        setSubmitting(false);
+        setError("Wrong username or password");
+        setTimeout(() => {
+          setError(null);
+        }, 2500);
+      });
   };
 
   const handleGoogle = (res) => {
@@ -92,6 +107,11 @@ export default function LoginDashboard() {
         <Form>
           <Container maxWidth="xs">
             <Paper className={classes.paper}>
+              {error && (
+                <Alert severity="error" className={classes.alert}>
+                  {error}
+                </Alert>
+              )}
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
               </Avatar>
@@ -111,6 +131,7 @@ export default function LoginDashboard() {
                     autoComplete="email"
                     type="email"
                   />
+                  <ErrorMessage name="email" />
                 </Grid>
                 <Grid item xs={12}>
                   <Field
@@ -124,6 +145,7 @@ export default function LoginDashboard() {
                     id="password"
                     autoComplete="current-password"
                   />
+                  <ErrorMessage name="password" />
                 </Grid>
                 <Grid item xs={12}>
                   <Field
@@ -159,7 +181,6 @@ export default function LoginDashboard() {
                   </Button>
                 )}
                 onSuccess={handleGoogle}
-                onFailure={handleGoogle}
               ></GoogleLogin>
               <Grid container justify="flex-end">
                 {/* <Grid item xs>

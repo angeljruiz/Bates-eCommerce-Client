@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import {
   Container,
@@ -9,6 +9,7 @@ import {
   makeStyles,
   Paper,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import axios from "axios";
 
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
@@ -36,21 +37,35 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+
+  alert: {
+    width: "100%",
+  },
 }));
 
 export default function SignupDashboard() {
+  const [error, setError] = useState();
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleSignup = (body) => {
-    axios.post("/signup", body).then(({ data: { token } }) => {
-      const bearer = "Bearer " + token;
-      axios.defaults.headers.common["Authorization"] = bearer;
-      localStorage.setItem("token", bearer);
-      dispatch(init({ email: body.email }));
-      history.push("/");
-    });
+  const handleSignup = (body, { setSubmitting }) => {
+    axios
+      .post("/signup", body)
+      .then(({ data: { token } }) => {
+        const bearer = "Bearer " + token;
+        axios.defaults.headers.common["Authorization"] = bearer;
+        localStorage.setItem("token", bearer);
+        dispatch(init({ email: body.email }));
+        history.push("/");
+      })
+      .catch(() => {
+        setSubmitting(false);
+        setError("Error. Email already being used?");
+        setTimeout(() => {
+          setError(null);
+        }, 2500);
+      });
   };
 
   return (
@@ -67,6 +82,11 @@ export default function SignupDashboard() {
         <Form>
           <Container maxWidth="xs">
             <Paper className={classes.paper}>
+              {error && (
+                <Alert severity="error" className={classes.alert}>
+                  {error}
+                </Alert>
+              )}
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
               </Avatar>

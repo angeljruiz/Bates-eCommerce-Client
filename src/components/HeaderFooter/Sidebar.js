@@ -12,13 +12,11 @@ import {
   ListItemAvatar,
   Avatar,
   Divider,
-  Container,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import { mdiRadioboxBlank } from "@mdi/js";
 import Icon from "@mdi/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AnchorLink from "react-anchor-link-smooth-scroll";
 
 import { showSidebar } from "../../actions/sidebarActions";
 import { showCart } from "../../actions/cartActions";
