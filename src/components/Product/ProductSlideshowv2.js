@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,7 +7,6 @@ import {
   makeStyles,
   Grid,
   Button,
-  Box,
 } from "@material-ui/core";
 import { useSelector, shallowEqual } from "react-redux";
 
@@ -42,20 +41,26 @@ const ProductSlideshowv2 = ({ id }) => {
       (state) => state.products.find((p) => p.sku === id),
       shallowEqual
     ) || {};
-  const selectedThumb = useSelector(
-    (state) => state.global.dash.selectedProductThumb
-  );
+  const [selectedThumb, setThumb] = useState(0);
   const classes = useStyles();
+
+  const updateThumb = (index) => {
+    if (index >= images.length) {
+      setThumb(0);
+    } else if (index < 0) {
+      setThumb(images.length - 1);
+    } else setThumb(index);
+  };
 
   return (
     <Card className={classes.root}>
       <CardContent>
         <Grid container direction="row" spacing={1}>
           <Grid item xs={12}>
-            {images && (
+            {(images || {}).length > 1 && (
               <img
                 id="mainImg"
-                src={images[0].url}
+                src={images[selectedThumb].url}
                 style={{
                   width: "100%",
                   maxHeight: "80vh",
@@ -64,19 +69,31 @@ const ProductSlideshowv2 = ({ id }) => {
                 alt="Current"
               />
             )}
-            <div style={{ position: "relative", top: "-50%" }}>
-              <div style={{ display: "flex" }}>
-                <Button variant="contained" color="primary">
-                  {"<"}
-                </Button>
-                <div className="flex" />
-                <Button variant="contained" color="primary">
-                  {">"}
-                </Button>
+
+            {(images || {}).length > 1 && (
+              <div style={{ position: "relative", top: "-50%" }}>
+                <div style={{ display: "flex" }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => updateThumb(selectedThumb + 1)}
+                  >
+                    {"<"}
+                  </Button>
+                  <div className="flex" />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => updateThumb(selectedThumb - 1)}
+                  >
+                    {">"}
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
           </Grid>
           {images &&
+            images.length > 1 &&
             images.map((image, i) => {
               return (
                 <Grid item xs={4} key={i}>
@@ -87,6 +104,7 @@ const ProductSlideshowv2 = ({ id }) => {
                     id={`product-thumb-${i}`}
                     variant="rounded"
                     src={image.url}
+                    onClick={() => setThumb(i)}
                   ></Avatar>
                 </Grid>
               );
