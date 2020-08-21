@@ -1,22 +1,21 @@
 import React from "react";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import { Modal, makeStyles, Box, Button } from "@material-ui/core";
+import { makeStyles, Box, Button, Drawer } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import { showCart } from "../../actions/cartActions";
 import CartItem from "./CartItem";
-import { useHistory } from "react-router-dom";
+import dStyle from "../../style/style";
 
 const useStyles = makeStyles((theme) => {
   return {
     modal: {
       overflow: "scroll",
     },
-    modalBox: {
-      paddingBottom: theme.spacing(2),
-      position: "absolute",
-      top: theme.spacing(2),
-      right: 0,
+
+    drawerPaper: {
+      backgroundColor: "inherit",
     },
 
     toolbar: theme.mixins.toolbar,
@@ -49,31 +48,33 @@ function Cart() {
   }
 
   return (
-    <>
-      <Modal
-        open={show}
-        className={classes.modal}
-        onBackdropClick={hideCart}
-        onEscapeKeyDown={hideCart}
-      >
-        <Box className={classes.modalBox} style={{ outline: "none" }}>
-          <div className={classes.toolbar} />
-          {Object.keys(products || {}).map((k, i) => (
-            <CartItem sku={products[k].sku} key={i} />
-          ))}
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<ShoppingCartIcon />}
-            onClick={gotoCheckout}
-            fullWidth
-          >
-            Checkout
-          </Button>
-          <div className={classes.toolbar} />
-        </Box>
-      </Modal>
-    </>
+    <Drawer
+      open={show}
+      anchor="right"
+      className={classes.modal}
+      onBackdropClick={hideCart}
+      onEscapeKeyDown={hideCart}
+      classes={{
+        paper: classes.drawerPaper,
+      }}
+    >
+      <Box style={{ outline: "none" }}>
+        <div className={classes.toolbar} />
+        {Object.keys(products || {}).map((k, i) => (
+          <CartItem sku={products[k].sku} key={i} />
+        ))}
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<ShoppingCartIcon />}
+          onClick={gotoCheckout}
+          fullWidth
+        >
+          Checkout
+        </Button>
+        <div className={classes.toolbar} />
+      </Box>
+    </Drawer>
   );
 }
 

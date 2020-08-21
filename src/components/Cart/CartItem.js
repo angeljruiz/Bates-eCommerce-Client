@@ -26,6 +26,7 @@ import { useSelector, shallowEqual, useDispatch } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 400,
+    width: "100%",
     marginBottom: theme.spacing(2),
   },
   media: {
@@ -62,7 +63,7 @@ function CartItem({ sku }) {
           </IconButton>
         }
         title={product.name}
-        subheader={(product.price * product.amount).toFixed(2)}
+        subheader={`$${(product.price * product.amount).toFixed(2)}`}
         classes={{
           subheader: classes.green,
         }}
