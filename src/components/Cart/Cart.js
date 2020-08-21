@@ -56,7 +56,7 @@ function Cart() {
         onBackdropClick={hideCart}
         onEscapeKeyDown={hideCart}
       >
-        <Box className={classes.modalBox}>
+        <Box className={classes.modalBox} style={{ outline: "none" }}>
           <div className={classes.toolbar} />
           {Object.keys(products || {}).map((k, i) => (
             <CartItem sku={products[k].sku} key={i} />
