@@ -70,7 +70,6 @@ export default function Checkout() {
   const classes = useStyles();
   const { id } = useParams();
   const [activeStep, setActiveStep] = React.useState(id ? steps.length : 0);
-  console.log(activeStep);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);

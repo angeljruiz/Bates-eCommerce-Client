@@ -6,7 +6,6 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 import { showCart } from "../../actions/cartActions";
 import CartItem from "./CartItem";
-import dStyle from "../../style/style";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -16,6 +15,11 @@ const useStyles = makeStyles((theme) => {
 
     drawerPaper: {
       backgroundColor: "inherit",
+      marginBottom: theme.spacing(2),
+    },
+
+    margins: {
+      margin: theme.spacing(1, 0),
     },
 
     toolbar: theme.mixins.toolbar,
@@ -58,7 +62,7 @@ function Cart() {
         paper: classes.drawerPaper,
       }}
     >
-      <Box style={{ outline: "none" }}>
+      <Box className={classes.margins} style={{ outline: "none" }}>
         <div className={classes.toolbar} />
         {Object.keys(products || {}).map((k, i) => (
           <CartItem sku={products[k].sku} key={i} />

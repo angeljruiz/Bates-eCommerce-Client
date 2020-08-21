@@ -10,6 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin, faGithub } from "@fortawesome/free-brands-svg-icons";
 import axios from "axios";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 import Router from "./router/Router";
 import { init } from "./actions/accountActions";
@@ -17,6 +19,8 @@ import { addProduct } from "./actions/productsActions";
 
 import "./App.scss";
 import { addSection, addOrders } from "./actions/globalActions";
+
+const stripePromise = loadStripe("pk_test_JJ1eMdKN0Hp4UFJ6kWXWO4ix00jtXzq5XG");
 
 library.add(
   faSignInAlt,
@@ -44,6 +48,8 @@ export default function App() {
 
   if (!p) p = [];
   if (!Array.isArray(p)) p = [p];
+
+  console.log(process.env.DATABASE_USERNAME);
 
   useEffect(() => {
     axios.get("/account").then((res) => {
@@ -85,9 +91,9 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <Elements stripe={stripePromise}>
       <CssBaseline />
       <Router />
-    </>
+    </Elements>
   );
 }
