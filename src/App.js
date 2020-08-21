@@ -49,8 +49,6 @@ export default function App() {
   if (!p) p = [];
   if (!Array.isArray(p)) p = [p];
 
-  console.log(process.env.REACT_APP_STRIPE_SECRET);
-
   useEffect(() => {
     axios.get("/account").then((res) => {
       dispatch(init(res.data));
