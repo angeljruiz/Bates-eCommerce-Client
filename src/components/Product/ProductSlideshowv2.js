@@ -53,7 +53,7 @@ const ProductSlideshowv2 = ({ id }) => {
 
   return (
     <>
-      {images && (
+      {images && images.length >= 1 && (
         <Card className={classes.root}>
           <CardContent>
             <Grid container direction="row" spacing={1}>
