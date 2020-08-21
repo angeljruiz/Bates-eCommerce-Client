@@ -62,6 +62,11 @@ const useStyles = makeStyles((theme) => ({
     color: "inherit",
     textDecoration: "none",
   },
+
+  primary: {
+    backgroundColor: theme.palette.primary.dark,
+    color: "white",
+  },
 }));
 
 function Sidebar() {
@@ -102,7 +107,7 @@ function Sidebar() {
           onClick={() => followLink("/")}
         >
           <ListItemAvatar>
-            <Avatar>
+            <Avatar className={classes.primary}>
               <HomeIcon />
             </Avatar>
           </ListItemAvatar>
@@ -121,7 +126,7 @@ function Sidebar() {
           onClick={() => followLink("/dash")}
         >
           <ListItemAvatar>
-            <Avatar>
+            <Avatar className={classes.primary}>
               <FontAwesomeIcon icon="sign-in-alt" />
             </Avatar>
           </ListItemAvatar>
@@ -133,7 +138,7 @@ function Sidebar() {
             onClick={() => followLink("/login")}
           >
             <ListItemAvatar>
-              <Avatar>
+              <Avatar className={classes.primary}>
                 <FontAwesomeIcon icon="sign-in-alt" />
               </Avatar>
             </ListItemAvatar>
@@ -143,7 +148,7 @@ function Sidebar() {
         {account.email && (
           <ListItemButton onClick={logout}>
             <ListItemAvatar>
-              <Avatar>
+              <Avatar className={classes.primary}>
                 <FontAwesomeIcon icon="sign-out-alt" />
               </Avatar>
             </ListItemAvatar>
@@ -157,7 +162,7 @@ function Sidebar() {
             onClick={() => followLink(`/#${section.name}`)}
           >
             <ListItemAvatar>
-              <Avatar>
+              <Avatar className={classes.primary}>
                 <Icon path={mdiRadioboxBlank} size={1} />
               </Avatar>
             </ListItemAvatar>
