@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   Avatar,
-  Typography,
   makeStyles,
   Grid,
   Button,
@@ -36,7 +35,7 @@ const useStyles = makeStyles((theme) => {
 });
 
 const ProductSlideshowv2 = ({ id }) => {
-  const { name, images } =
+  const { images } =
     useSelector(
       (state) => state.products.find((p) => p.sku === id),
       shallowEqual

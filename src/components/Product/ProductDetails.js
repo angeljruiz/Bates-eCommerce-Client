@@ -1,41 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import {
   Card,
-  CardHeader,
   CardContent,
   CardActions,
   Divider,
   Grid,
   makeStyles,
+  Typography,
+  IconButton,
   Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
 } from "@material-ui/core";
-import * as Yup from "yup";
-
-import { deleteProduct, addProduct } from "../../actions/productsActions";
-import {
-  showDashProductModal,
-  selectProduct,
-} from "../../actions/globalActions";
-import { Formik, Field, Form } from "formik";
-import { TextField, Select } from "formik-material-ui";
+import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
+import { addProductCart } from "../../actions/cartActions";
 
 const useStyles = makeStyles((theme) => ({
-  root: { margin: "0 auto" },
+  root: {
+    margin: theme.spacing(0, 2),
+  },
   margin: { marginTop: theme.spacing(2) },
+  amount: {
+    fontSize: 28,
+  },
+  price: {
+    color: "green",
+  },
 }));
-
-const validationSchema = Yup.object().shape({
-  sku: Yup.number().required().label("SKU"),
-  price: Yup.number().required().label("Price"),
-  name: Yup.string().required().min(4).label("Name"),
-  quantity: Yup.number().required().label("Quantity"),
-  description: Yup.string().label("Description"),
-  // section: Yup.string().required().label("Section"),
-});
 
 const ProductDetails = ({ id }) => {
   const product =
@@ -43,142 +34,65 @@ const ProductDetails = ({ id }) => {
       (state) => state.products.find((p) => p.sku === id),
       shallowEqual
     ) || {};
-  const sections = useSelector((state) => state.global.sections, shallowEqual);
+  const [amount, setAmount] = useState(1);
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  const handleSave = (body) => {
-    console.log("@@@@@@");
-    fetch("/product", {
-      method: id ? "PATCH" : "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    dispatch(addProduct(body));
-    dispatch(selectProduct(body.sku));
-  };
-
-  const handleDelete = (id) => {
-    dispatch(deleteProduct(id));
-    dispatch(showDashProductModal(false));
-    fetch(`/product/${id}`, {
-      method: "DELETE",
-    });
-  };
-
   return (
     <Card className={classes.root}>
-      <CardHeader title="Details" />
       <Divider />
       <CardContent>
-        <Formik
-          initialValues={{
-            sku: product.sku || "",
-            name: product.name || "",
-            price: product.price || "",
-            description: product.description || "",
-            quantity: product.quantity || "",
-            section: product.section || "",
-          }}
-          onSubmit={handleSave}
-          validationSchema={validationSchema}
-        >
-          {() => (
-            <Form>
-              <Grid container spacing={3}>
-                <Grid item md={6} xs={12}>
-                  <Field
-                    component={TextField}
-                    fullWidth
-                    label="SKU"
-                    name="sku"
-                    required
-                    type="number"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item md={6} xs={12}>
-                  <Field
-                    component={TextField}
-                    fullWidth
-                    label="Name"
-                    name="name"
-                    required
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item md={6} xs={12}>
-                  <Field
-                    component={TextField}
-                    fullWidth
-                    label="Price"
-                    name="price"
-                    required
-                    type="number"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item md={6} xs={12}>
-                  <Field
-                    component={TextField}
-                    fullWidth
-                    label="Description"
-                    name="description"
-                    required
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item md={6} xs={12}>
-                  <Field
-                    component={TextField}
-                    fullWidth
-                    label="Quantity"
-                    name="quantity"
-                    type="number"
-                    required
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item md={6} xs={12}>
-                  <FormControl style={{ minWidth: 100 }}>
-                    <InputLabel htmlFor="section">Section</InputLabel>
-                    <Field
-                      component={Select}
-                      name="section"
-                      fullWidth
-                      inputProps={{
-                        id: "section",
-                      }}
-                    >
-                      {sections.map((section) => (
-                        <MenuItem key={section.id} value={section.id}>
-                          {section.name}
-                        </MenuItem>
-                      ))}
-                    </Field>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              <Divider className={classes.margin} />
-              <CardActions>
-                <Button type="submit" variant="contained" color="primary">
-                  Save
-                </Button>
-                {id && (
-                  <Button
-                    onClick={() => handleDelete(id)}
-                    color="secondary"
-                    variant="contained"
-                  >
-                    Delete
-                  </Button>
-                )}
-              </CardActions>
-            </Form>
-          )}
-        </Formik>
+        <Grid container spacing={2}>
+          <Grid item md={6} xs={12}>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="primary"
+              gutterBottom
+            >
+              {product.name}
+            </Typography>
+            <Typography variant="subtitle1" className={classes.price}>
+              ${(product.price * amount).toFixed(2)}
+            </Typography>
+          </Grid>
+          <Divider />
+          <Grid item xs={12}>
+            <Typography variant="body1">{product.description}</Typography>
+          </Grid>
+        </Grid>
+        <Divider className={classes.margin} />
+        <CardActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              product.amount = amount;
+              dispatch(addProductCart(product));
+            }}
+          >
+            Add to cart
+          </Button>
+          <CardActions disableSpacing>
+            <IconButton
+              onClick={() => {
+                if (amount >= 2) setAmount(amount - 1);
+              }}
+              aria-label="decrement"
+            >
+              <RemoveIcon />
+            </IconButton>
+            <Typography className={classes.amount} variant="body2">
+              {amount}
+            </Typography>
+            <IconButton
+              aria-label="increment"
+              onClick={() => setAmount(amount + 1)}
+            >
+              <AddIcon />
+            </IconButton>
+          </CardActions>
+        </CardActions>
       </CardContent>
     </Card>
   );

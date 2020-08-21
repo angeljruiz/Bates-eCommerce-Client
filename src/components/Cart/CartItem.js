@@ -36,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
   amount: {
     fontSize: 28,
   },
+
+  green: {
+    color: "green",
+  },
 }));
 
 function CartItem({ sku }) {
@@ -58,7 +62,10 @@ function CartItem({ sku }) {
           </IconButton>
         }
         title={product.name}
-        subheader={product.price}
+        subheader={(product.price * product.amount).toFixed(2)}
+        classes={{
+          subheader: classes.green,
+        }}
       />
       <CardMedia
         className={classes.media}
@@ -73,7 +80,7 @@ function CartItem({ sku }) {
       <CardActions disableSpacing>
         <IconButton
           onClick={() => dispatch(decrementProductCart(product))}
-          aria-label="add to favorites"
+          aria-label="increment"
         >
           <RemoveIcon />
         </IconButton>
@@ -81,7 +88,7 @@ function CartItem({ sku }) {
           {product.amount}
         </Typography>
         <IconButton
-          aria-label="share"
+          aria-label="decrement"
           onClick={() => dispatch(incrementProductCart(product))}
         >
           <AddIcon />

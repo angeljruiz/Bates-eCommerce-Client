@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 
-import { ProductDetails, ProductSlideshow } from "./";
+import { ProductModalDetails, ProductSlideshow } from "./";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +32,7 @@ const ProductPage = ({ id }) => {
         </Grid>
       )}
       <Grid item md={6} xs={12}>
-        <ProductDetails id={id} />
+        <ProductModalDetails id={id} />
       </Grid>
     </Grid>
   );

@@ -6,6 +6,7 @@ import { ProductDetails, ProductSlideshowv2 } from "./";
 const useStyles = makeStyles((theme) => ({
   root: {
     justifyContent: "center",
+    maxWidth: "100%",
   },
 }));
 
@@ -17,7 +18,9 @@ const ProductPage = ({ match }) => {
       <Grid item xs={12}>
         <ProductSlideshowv2 id={match.params.sku} />
       </Grid>
-      <Grid item md={6} xs={12}></Grid>
+      <Grid item md={6} xs={12}>
+        <ProductDetails id={match.params.sku} />
+      </Grid>
     </Grid>
   );
 };
