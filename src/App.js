@@ -16,7 +16,7 @@ import { init } from "./actions/accountActions";
 import { addProduct } from "./actions/productsActions";
 
 import "./App.scss";
-import { addSection } from "./actions/globalActions";
+import { addSection, addOrders } from "./actions/globalActions";
 
 library.add(
   faSignInAlt,
@@ -39,6 +39,7 @@ if (token) {
 export default function App() {
   let p = useSelector((state) => state.products, shallowEqual);
   const sections = useSelector((state) => state.global.sections, shallowEqual);
+  const orders = useSelector((state) => state.global.dash.orders, shallowEqual);
   const dispatch = useDispatch();
 
   if (!p) p = [];
@@ -55,6 +56,12 @@ export default function App() {
       res.data.forEach((section) => {
         dispatch(addSection(section));
       });
+    });
+    axios.get("/order").then((o) => {
+      o.data = o.data.filter(
+        (z) => orders.findIndex((s) => s.cid === z.cid) === -1
+      );
+      if (o.data.length > 0) dispatch(addOrders(o.data));
     });
     fetch("/product").then(async (products) => {
       products = await products.json();

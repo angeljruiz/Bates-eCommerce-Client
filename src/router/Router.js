@@ -11,6 +11,7 @@ import Checkout from "../components/Checkout/Checkout";
 import LoginDashboard from "../components/LoginSignup/LoginDashboard";
 import SignupDashboard from "../components/LoginSignup/SignupDashboard";
 import ProductPage from "../components/Product/ProductPage";
+import OrdersPage from "../components/Orders/Orders";
 
 function Router() {
   return (
@@ -25,6 +26,7 @@ function Router() {
           <Route path="/login" exact component={LoginDashboard} />
           <Route path="/signup" exact component={SignupDashboard} />
           <Route path="/product/:sku" exact component={ProductPage} />
+          <Route path="/orders" exact component={OrdersPage} />
         </Switch>
       </Layout>
     </BrowserRouter>
