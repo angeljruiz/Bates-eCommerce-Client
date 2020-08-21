@@ -74,7 +74,7 @@ function Orders() {
                     <TableRow
                       hover
                       key={j}
-                      onClick={() => history.push(`/orders/${l.cid}`)}
+                      onClick={() => history.push(`/checkout/${l.cid}`)}
                     >
                       {Object.keys(l)
                         .filter(
