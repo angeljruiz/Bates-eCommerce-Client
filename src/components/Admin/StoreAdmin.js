@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { Grid } from "@material-ui/core";
 
@@ -6,13 +6,12 @@ import {
   showDashProductModal,
   selectProduct,
   selectProductThumb,
-  addOrders,
 } from "../../actions/globalActions";
 import { ProductModal } from "../Product";
 import Section from "../Product/Section";
 import Widget from "./Widget";
-import axios from "axios";
 import { useHistory } from "react-router-dom";
+import moment from "moment";
 
 function StoreAdmin() {
   const products = useSelector((state) => state.products).map((p) => {
@@ -80,9 +79,12 @@ function StoreAdmin() {
         <Grid item xs={12}>
           <Widget
             name="Recent Orders"
-            list={orders}
+            list={orders.map((o) => {
+              o.date = moment(o.date).format("lll");
+              return o;
+            })}
             Content={ProductModal}
-            action={(i) => history.push(`/orders/${orders[i].cid}`)}
+            action={(i) => history.push(`/checkout/${orders[i].id}`)}
             buttonText="See more orders"
             ModalPage={ProductModal}
             show={false}

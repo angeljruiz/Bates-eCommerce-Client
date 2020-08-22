@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => {
       marginBottom: theme.spacing(2),
     },
 
-    margins: {
+    box: {
       margin: theme.spacing(1, 0),
     },
 
@@ -62,10 +62,10 @@ function Cart() {
         paper: classes.drawerPaper,
       }}
     >
-      <Box className={classes.margins} style={{ outline: "none" }}>
+      <Box className={classes.box} style={{ outline: "none" }}>
         <div className={classes.toolbar} />
-        {Object.keys(products || {}).map((k, i) => (
-          <CartItem sku={products[k].sku} key={i} />
+        {products.map((product, i) => (
+          <CartItem sku={product.sku} key={i} />
         ))}
         <Button
           variant="contained"

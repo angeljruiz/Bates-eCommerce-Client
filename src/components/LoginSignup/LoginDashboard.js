@@ -87,7 +87,6 @@ export default function LoginDashboard() {
       email: res.profileObj.email,
       id: res.googleId,
     };
-    axios.post("/oauth", google);
     const bearer = "Bearer " + google.id;
     axios.defaults.headers.common["Authorization"] = bearer;
     localStorage.setItem("token", bearer);

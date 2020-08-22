@@ -59,7 +59,7 @@ function Product({ sku }) {
         <Button
           color="primary"
           onClick={() => {
-            dispatch(addProductCart(product, 1));
+            dispatch(addProductCart(product));
           }}
         >
           Add to cart

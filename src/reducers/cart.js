@@ -1,19 +1,22 @@
-const cartDefaultState = { show: false, products: {}, totalItems: 0 };
+const cartDefaultState = { show: false, products: [], totalItems: 0 };
 
 export default (state = cartDefaultState, { type, product, show }) => {
   switch (type) {
     case "SHOW_CART":
       return { ...state, show };
     case "ADD_PRODUCT_CART":
-      let item = Object.keys(product)[0];
+      let item = state.products.findIndex((p) => p.sku === product.sku);
       if (state.products[item] !== undefined)
-        product[item].amount += state.products[item].amount;
+        product.amount += state.products[item].amount;
       return {
         ...state,
-        products: { ...state.products, ...product },
+        products: [
+          ...state.products.filter((p) => p.sku !== product.sku),
+          product,
+        ],
         totalItems:
           state.totalItems +
-          product[item].amount -
+          product.amount -
           ((state.products[item] || {}).amount || 0),
       };
     case "REMOVE_PRODUCT":

@@ -53,7 +53,7 @@ const ProductDetails = ({ id }) => {
               {product.name}
             </Typography>
             <Typography variant="subtitle1" className={classes.price}>
-              ${(product.price * amount).toFixed(2)}
+              ${((product.price / 100) * amount).toFixed(2)}
             </Typography>
           </Grid>
           <Divider />

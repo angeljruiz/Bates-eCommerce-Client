@@ -14,7 +14,7 @@ import {
   Divider,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
-import { mdiRadioboxBlank } from "@mdi/js";
+import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import Icon from "@mdi/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -155,7 +155,7 @@ function Sidebar() {
           >
             <ListItemAvatar>
               <Avatar className={classes.primary}>
-                <Icon path={mdiRadioboxBlank} size={1} />
+                <RadioButtonCheckedIcon />
               </Avatar>
             </ListItemAvatar>
             <ListItemText primary={section.name} />

@@ -6,11 +6,10 @@ export const showCart = (show) => {
 };
 
 export const addProductCart = (product) => {
-  let t = {};
-  t[product.sku] = { ...product, amount: product.amount || 1 };
+  if (!product.amount) product.amount = 1;
   return {
     type: "ADD_PRODUCT_CART",
-    product: t,
+    product,
   };
 };
 

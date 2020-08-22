@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CartItem({ sku }) {
   const product = useSelector(
-    (state) => state.cart.products[sku],
+    (state) => state.cart.products.find((p) => p.sku === sku),
     shallowEqual
   );
   const dispatch = useDispatch();
@@ -63,7 +63,7 @@ function CartItem({ sku }) {
           </IconButton>
         }
         title={product.name}
-        subheader={`$${(product.price * product.amount).toFixed(2)}`}
+        subheader={`$${((product.price / 100) * product.amount).toFixed(2)}`}
         classes={{
           subheader: classes.green,
         }}

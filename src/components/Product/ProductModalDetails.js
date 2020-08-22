@@ -48,7 +48,6 @@ const ProductDetails = ({ id }) => {
   const classes = useStyles();
 
   const handleSave = (body) => {
-    console.log("@@@@@@");
     fetch("/product", {
       method: id ? "PATCH" : "POST",
       headers: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Stepper from "@material-ui/core/Stepper";
@@ -12,6 +12,12 @@ import Review from "./Review";
 import { Container } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import Axios from "axios";
+import { useElements, useStripe, CardElement } from "@stripe/react-stripe-js";
+import { Alert } from "@material-ui/lab";
+import { v4 as uuid } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -48,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
   },
+
+  alert: {
+    width: "100%",
+  },
 }));
 
 const steps = ["Review your order", "Shipping address", "Payment details"];
@@ -65,11 +75,25 @@ function getStepContent(step) {
   }
 }
 
+const validationSchema = Yup.object().shape({
+  fn: Yup.string().required().min(2).label("First Name"),
+  ln: Yup.string().required().min(2).label("Last Name"),
+  line1: Yup.string().required().min(1).label("Address Line 1"),
+  city: Yup.string().required().label("City"),
+  state: Yup.string().required().label("State"),
+  postal_code: Yup.string().required().length(5).label("ZIP Code"),
+});
+
 export default function Checkout() {
-  const cart = useSelector((state) => state.cart.products);
-  const classes = useStyles();
   const { id } = useParams();
-  const [activeStep, setActiveStep] = React.useState(id ? steps.length : 0);
+  const stripe = useStripe();
+  const elements = useElements();
+  const cart = useSelector((state) => state.cart.products);
+  const [error, setError] = useState();
+  const [activeStep, setActiveStep] = useState(id ? steps.length : 0);
+  const [disabled, setDisabled] = useState(true);
+  const classes = useStyles();
+  const paymentCheck = activeStep === steps.length - 1;
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -79,88 +103,143 @@ export default function Checkout() {
     setActiveStep(activeStep - 1);
   };
 
-  const handlePaypal = () => {
-    let t = {};
-    t.items = Object.keys(cart).map((k) => {
-      let w = cart[k];
-      w.quantity = cart[k].amount;
-      delete w.amount;
-      return w;
+  const handlePayment = (formData, setSubmitting) => {
+    setDisabled(true);
+    Axios.post("/payment", cart).then(async ({ data }) => {
+      if (!stripe || !elements) {
+        return;
+      }
+      const result = await stripe.confirmCardPayment(data, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: `${formData.fn} ${formData.ln}`,
+          },
+        },
+      });
+      if (result.error) {
+        setError(result.error.message);
+        setSubmitting(false);
+        setDisabled(false);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          formData.cart = JSON.stringify(cart);
+          formData.date = new Date().toISOString();
+          formData.id = uuid().split("-").slice(0, 2).join("");
+          Axios.post("/order", formData).then(({ data }) => {
+            window.location.href = `/checkout/${data.id}`;
+          });
+        }
+      }
     });
-    t.total = t.items
-      .reduce((sum, i) => sum + i.price * i.quantity, 0)
-      .toFixed(2);
-    t.subtotal = t.total;
-    t.shipping = 0;
-    document.querySelector("#cart").value = JSON.stringify(t);
-    document.querySelector("#paypalForm").submit();
+  };
+
+  useEffect(() => {
+    if (elements) {
+      let cardElement = elements.getElement(CardElement);
+      if (cardElement) {
+        cardElement.on("change", (event) => {
+          if (event.complete) {
+            setDisabled(false);
+          } else setDisabled(true);
+        });
+      }
+    }
+  }, [paymentCheck, elements]);
+
+  const handleStep = (data, { setSubmitting }) => {
+    if (paymentCheck) handlePayment(data, setSubmitting);
+    else {
+      handleNext();
+      setSubmitting(false);
+    }
   };
 
   return (
-    <>
-      <Container className={classes.layout}>
-        <Paper className={classes.paper}>
-          <Typography component="h1" variant="h4" align="center">
-            Checkout
-          </Typography>
-          <Stepper
-            activeStep={activeStep}
-            className={classes.stepper}
-            alternativeLabel
-          >
-            {steps.map((label) => (
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper>
-          <>
-            {activeStep === steps.length ? (
+    <Formik
+      onSubmit={handleStep}
+      initialValues={{}}
+      validationSchema={validationSchema}
+    >
+      {({ isSubmitting }) => (
+        <Form>
+          <Container className={classes.layout}>
+            <Paper className={classes.paper}>
+              {error && (
+                <Alert severity="error" className={classes.alert}>
+                  {error}
+                </Alert>
+              )}
+              <Typography component="h1" variant="h4" align="center">
+                Checkout
+              </Typography>
+              <Stepper
+                activeStep={activeStep}
+                className={classes.stepper}
+                alternativeLabel
+              >
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
               <>
-                <Typography variant="h5" gutterBottom>
-                  Thank you for your order.
-                </Typography>
-                <Typography variant="subtitle1">
-                  Your order number is #{id}. We have emailed your order
-                  confirmation, and will send you an update when your order has
-                  shipped.
-                </Typography>
+                {activeStep === steps.length ? (
+                  <>
+                    <Typography variant="h5" gutterBottom>
+                      Thank you for your order.
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      Your order id is #{id}. We have emailed your order
+                      confirmation, and will send you an update when your order
+                      has shipped.
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    {getStepContent(activeStep)}
+                    <div className={classes.buttons}>
+                      {activeStep !== 0 && (
+                        <Button onClick={handleBack} className={classes.button}>
+                          Back
+                        </Button>
+                      )}
+                      {activeStep === 0 && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={handleNext}
+                          className={`${classes.button} paypal-logo`}
+                        >
+                          Continue
+                        </Button>
+                      )}
+                      {activeStep !== 0 && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          type="submit"
+                          className={classes.button}
+                          disabled={
+                            activeStep === steps.length - 1
+                              ? disabled || isSubmitting
+                              : false
+                          }
+                        >
+                          {activeStep === steps.length - 1
+                            ? "Place order"
+                            : "Continue"}
+                        </Button>
+                      )}
+                    </div>
+                  </>
+                )}
               </>
-            ) : (
-              <>
-                {getStepContent(activeStep)}
-                <div className={classes.buttons}>
-                  {activeStep !== 0 && (
-                    <Button onClick={handleBack} className={classes.button}>
-                      Back
-                    </Button>
-                  )}
-                  {activeStep === 0 && (
-                    <Button
-                      variant="contained"
-                      onClick={handlePaypal}
-                      className={`${classes.button} paypal-logo`}
-                    >
-                      <i>Pay</i>
-                      <i>Pal</i>
-                    </Button>
-                  )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    className={classes.button}
-                  >
-                    {activeStep === steps.length - 1
-                      ? "Place order"
-                      : "Continue"}
-                  </Button>
-                </div>
-              </>
-            )}
-          </>
-        </Paper>
-      </Container>
-    </>
+            </Paper>
+          </Container>
+        </Form>
+      )}
+    </Formik>
   );
 }

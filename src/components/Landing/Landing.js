@@ -63,7 +63,11 @@ function Landing() {
           <Grid item xs={12} id={section.name}>
             <Box mb={3}>
               <Paper>
-                <Typography variant="h2" align="center">
+                <Typography
+                  variant="h2"
+                  align="center"
+                  style={{ fontWeight: "400" }}
+                >
                   {section.name}
                 </Typography>
               </Paper>

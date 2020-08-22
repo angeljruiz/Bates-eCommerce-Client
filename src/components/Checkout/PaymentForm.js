@@ -1,19 +1,21 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { CardElement } from "@stripe/react-stripe-js";
-import Axios from "axios";
-import { Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  header: {
+    marginBottom: theme.spacing(2),
+  },
+}));
 
 export default function PaymentForm() {
-  const handlePayment = () => {
-    Axios.post("/payment").then(({ data }) => console.log(data));
-  };
+  const classes = useStyles();
   return (
     <>
-      <Typography variant="h6" gutterBottom>
+      <Typography className={classes.header} variant="h6" gutterBottom>
         Payment method
       </Typography>
-      <Button onClick={handlePayment}>Test</Button>
       <CardElement
         options={{
           style: {

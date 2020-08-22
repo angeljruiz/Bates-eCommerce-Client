@@ -20,7 +20,7 @@ import { addProduct } from "./actions/productsActions";
 import "./App.scss";
 import { addSection, addOrders } from "./actions/globalActions";
 
-const stripePromise = loadStripe("pk_test_JJ1eMdKN0Hp4UFJ6kWXWO4ix00jtXzq5XG");
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE);
 
 library.add(
   faSignInAlt,
@@ -65,6 +65,10 @@ export default function App() {
       o.data = o.data.filter(
         (z) => orders.findIndex((s) => s.cid === z.cid) === -1
       );
+      o.data = o.data.map((d) => {
+        delete d.cart;
+        return d;
+      });
       if (o.data.length > 0) dispatch(addOrders(o.data));
     });
     fetch("/product").then(async (products) => {
