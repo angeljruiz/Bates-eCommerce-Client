@@ -168,7 +168,7 @@ export default function LoginDashboard() {
                 Login
               </Button>
               <GoogleLogin
-                clientId="1071517499996-33dbdbss5qachm3e3t2p53bp9g51tpgm.apps.googleusercontent.com"
+                clientId={process.env.REACT_APP_GOOGLE_ID}
                 render={(renderProps) => (
                   <Button
                     onClick={renderProps.onClick}
