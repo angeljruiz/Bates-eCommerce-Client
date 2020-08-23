@@ -23,12 +23,12 @@ export default function Section({ Order, list }) {
   const handleSave = (data) => {
     axios({
       method: Order !== null ? "PATCH" : "POST",
-      url: "/sections",
+      url: "/section",
       data,
     });
   };
   const handleDelete = (id) => {
-    axios.delete(`/sections/${id}`);
+    axios.delete(`/section/${id}`);
   };
 
   return (

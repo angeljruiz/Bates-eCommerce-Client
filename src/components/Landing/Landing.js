@@ -26,7 +26,7 @@ function Landing() {
   useEffect(() => {
     axios.defaults.baseURL = "/test_store";
 
-    axios.get("/sections").then((res) => {
+    axios.get("/section").then((res) => {
       res.data = res.data.filter(
         (s) => sections.findIndex((sec) => sec.id === s.id) === -1
       );
@@ -36,7 +36,6 @@ function Landing() {
     });
 
     axios.get("/order").then((o) => {
-      console.log(o);
       o.data = o.data.filter(
         (z) => orders.findIndex((s) => s.cid === z.cid) === -1
       );
