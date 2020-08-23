@@ -19,6 +19,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { TextField, CheckboxWithLabel } from "formik-material-ui";
 import { useDispatch } from "react-redux";
 import { init } from "../../actions/accountActions";
+import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -87,11 +88,13 @@ export default function LoginDashboard() {
       email: res.profileObj.email,
       id: res.googleId,
     };
-    const bearer = "Bearer " + google.id;
-    axios.defaults.headers.common["Authorization"] = bearer;
-    localStorage.setItem("token", bearer);
-    dispatch(init({ email: google.email }));
-    history.push("/");
+    Axios.post("/oauth", google).then(() => {
+      const bearer = "Bearer " + google.id;
+      axios.defaults.headers.common["Authorization"] = bearer;
+      localStorage.setItem("token", bearer);
+      dispatch(init({ email: google.email }));
+      history.push("/");
+    });
   };
 
   return (

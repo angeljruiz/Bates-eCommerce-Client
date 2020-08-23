@@ -74,7 +74,7 @@ export default function App() {
     fetch("/product").then(async (products) => {
       products = await products.json();
       products = products.filter(
-        (pro) => p.findIndex((s) => s.sku === pro.sku) === -1
+        (pro) => p.findIndex((s) => s.id === pro.id) === -1
       );
       products.forEach((product) => {
         if (!product.images) {

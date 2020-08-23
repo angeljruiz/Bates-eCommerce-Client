@@ -15,7 +15,7 @@ import moment from "moment";
 
 function StoreAdmin() {
   const products = useSelector((state) => state.products).map((p) => {
-    return { Id: p.sku, Name: p.name };
+    return { Id: p.id, Name: p.name };
   }, shallowEqual);
   const sections = useSelector((state) => state.global.sections, shallowEqual);
   const orders = useSelector((state) => state.global.dash.orders, shallowEqual);

@@ -26,12 +26,12 @@ function Landing() {
       newproducts = await newproducts.json();
       if (products.length === 0) return;
       newproducts = newproducts.filter(
-        (p) => products.findIndex((s) => s.sku === p.sku) === -1
+        (p) => products.findIndex((s) => s.id === p.id) === -1
       );
       newproducts.forEach((product) => {
         images.push(
           fetch(
-            `/product/${product.sku}/image?${new URLSearchParams([
+            `/product/${product.id}/image?${new URLSearchParams([
               ["limit", 1],
             ])}`
           )
@@ -84,7 +84,7 @@ function Landing() {
               .map((product, i) => (
                 <Grid item xs={12} md={4} key={i}>
                   <Box mb={2}>
-                    <Product sku={product.sku} />
+                    <Product id={product.id} />
                   </Box>
                 </Grid>
               ))}

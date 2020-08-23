@@ -16,10 +16,10 @@ const ProductPage = ({ match }) => {
   return (
     <Grid container className={classes.root} spacing={2}>
       <Grid item xs={12}>
-        <ProductSlideshowv2 id={match.params.sku} />
+        <ProductSlideshowv2 id={match.params.id} />
       </Grid>
       <Grid item md={6} xs={12}>
-        <ProductDetails id={match.params.sku} />
+        <ProductDetails id={match.params.id} />
       </Grid>
     </Grid>
   );

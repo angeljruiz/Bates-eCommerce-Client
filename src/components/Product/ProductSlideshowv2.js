@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => {
 const ProductSlideshowv2 = ({ id }) => {
   const { images } =
     useSelector(
-      (state) => state.products.find((p) => p.sku === id),
+      (state) => state.products.find((p) => p.id === id),
       shallowEqual
     ) || {};
   const [selectedThumb, setThumb] = useState(0);

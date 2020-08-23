@@ -43,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CartItem({ sku }) {
+function CartItem({ id }) {
   const product = useSelector(
-    (state) => state.cart.products.find((p) => p.sku === sku),
+    (state) => state.cart.products.find((p) => p.id === id),
     shallowEqual
   );
   const dispatch = useDispatch();

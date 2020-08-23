@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const ProductDetails = ({ id }) => {
   const product =
     useSelector(
-      (state) => state.products.find((p) => p.sku === id),
+      (state) => state.products.find((p) => p.id === id),
       shallowEqual
     ) || {};
   const [amount, setAmount] = useState(1);

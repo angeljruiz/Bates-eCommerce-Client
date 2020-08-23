@@ -25,7 +25,7 @@ function Router() {
           <Route path="/checkout/:id?" component={Checkout} />
           <Route path="/login" exact component={LoginDashboard} />
           <Route path="/signup" exact component={SignupDashboard} />
-          <Route path="/product/:sku" exact component={ProductPage} />
+          <Route path="/product/:id" exact component={ProductPage} />
           <Route path="/orders" exact component={OrdersPage} />
         </Switch>
       </Layout>

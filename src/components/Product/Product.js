@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Product({ sku }) {
+function Product({ id }) {
   const product = useSelector(
-    (state) => state.products.find((p) => p.sku === sku),
+    (state) => state.products.find((p) => p.id === id),
     shallowEqual
   );
   const classes = useStyles();
@@ -37,7 +37,7 @@ function Product({ sku }) {
     <Card className={classes.card}>
       <CardActionArea
         disableRipple
-        onClick={() => history.push(`/product/${product.sku}`)}
+        onClick={() => history.push(`/product/${product.id}`)}
       >
         {product.image && (
           <CardMedia

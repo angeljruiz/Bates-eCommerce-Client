@@ -5,13 +5,13 @@ export default (state = cartDefaultState, { type, product, show }) => {
     case "SHOW_CART":
       return { ...state, show };
     case "ADD_PRODUCT_CART":
-      let item = state.products.findIndex((p) => p.sku === product.sku);
+      let item = state.products.findIndex((p) => p.id === product.id);
       if (state.products[item] !== undefined)
         product.amount += state.products[item].amount;
       return {
         ...state,
         products: [
-          ...state.products.filter((p) => p.sku !== product.sku),
+          ...state.products.filter((p) => p.id !== product.id),
           product,
         ],
         totalItems:
@@ -23,7 +23,7 @@ export default (state = cartDefaultState, { type, product, show }) => {
       let products = {};
 
       Object.keys(state.products).forEach((k) => {
-        if (product.sku !== state.products[k].sku)
+        if (product.id !== state.products[k].id)
           products[k] = state.products[k];
       });
 

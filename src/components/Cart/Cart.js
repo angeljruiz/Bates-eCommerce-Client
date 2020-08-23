@@ -65,7 +65,7 @@ function Cart() {
       <Box className={classes.box} style={{ outline: "none" }}>
         <div className={classes.toolbar} />
         {products.map((product, i) => (
-          <CartItem sku={product.sku} key={i} />
+          <CartItem id={product.id} key={i} />
         ))}
         <Button
           variant="contained"

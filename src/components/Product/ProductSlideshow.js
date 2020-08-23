@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => {
 const ProductSlideshow = ({ id }) => {
   const { name, images } =
     useSelector(
-      (state) => state.products.find((p) => p.sku === id),
+      (state) => state.products.find((p) => p.id === id),
       shallowEqual
     ) || {};
   const selectedThumb = useSelector(
