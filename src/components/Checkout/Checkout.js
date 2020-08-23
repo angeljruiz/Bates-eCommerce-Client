@@ -105,33 +105,39 @@ export default function Checkout() {
 
   const handlePayment = (formData, setSubmitting) => {
     setDisabled(true);
-    Axios.post("/payment", cart).then(async ({ data }) => {
-      if (!stripe || !elements) {
-        return;
-      }
-      const result = await stripe.confirmCardPayment(data, {
-        payment_method: {
-          card: elements.getElement(CardElement),
-          billing_details: {
-            name: `${formData.fn} ${formData.ln}`,
+    Axios.post("/payment", cart)
+      .then(async ({ data }) => {
+        if (!stripe || !elements) {
+          return;
+        }
+        const result = await stripe.confirmCardPayment(data, {
+          payment_method: {
+            card: elements.getElement(CardElement),
+            billing_details: {
+              name: `${formData.fn} ${formData.ln}`,
+            },
           },
-        },
-      });
-      if (result.error) {
-        setError(result.error.message);
+        });
+        if (result.error) {
+          setError(result.error.message);
+          setSubmitting(false);
+          setDisabled(false);
+        } else {
+          if (result.paymentIntent.status === "succeeded") {
+            formData.cart = JSON.stringify(cart);
+            formData.date = new Date().toISOString();
+            formData.id = uuid().split("-").slice(0, 2).join("");
+            Axios.post("/order", formData).then(({ data }) => {
+              window.location.href = `/checkout/${data.id}`;
+            });
+          }
+        }
+      })
+      .catch((e) => {
+        setError(e);
         setSubmitting(false);
         setDisabled(false);
-      } else {
-        if (result.paymentIntent.status === "succeeded") {
-          formData.cart = JSON.stringify(cart);
-          formData.date = new Date().toISOString();
-          formData.id = uuid().split("-").slice(0, 2).join("");
-          Axios.post("/order", formData).then(({ data }) => {
-            window.location.href = `/checkout/${data.id}`;
-          });
-        }
-      }
-    });
+      });
   };
 
   useEffect(() => {

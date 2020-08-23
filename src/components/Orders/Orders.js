@@ -94,10 +94,6 @@ function Orders() {
                 })}
               </TableBody>
             </Table>
-
-            {/* <Button o color="primary">
-              JI
-            </Button> */}
           </Paper>
         </Grid>
       </Grid>
