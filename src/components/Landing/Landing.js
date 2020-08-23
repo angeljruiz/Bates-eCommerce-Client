@@ -36,6 +36,7 @@ function Landing() {
     });
 
     axios.get("/order").then((o) => {
+      console.log(o);
       o.data = o.data.filter(
         (z) => orders.findIndex((s) => s.cid === z.cid) === -1
       );
