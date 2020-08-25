@@ -70,8 +70,10 @@ export default function LoginDashboard() {
         const bearer = "Bearer " + token;
         axios.defaults.headers.common["Authorization"] = bearer;
         localStorage.setItem("token", bearer);
-        dispatch(init({ email: body.email }));
-        history.push("/");
+        axios.get("/account").then((res) => {
+          dispatch(init(res.data));
+          history.push(`/${res.data.url}`);
+        });
       })
       .catch(() => {
         setSubmitting(false);

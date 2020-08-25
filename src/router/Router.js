@@ -19,14 +19,14 @@ function Router() {
       <ScrollToTop />
       <Layout>
         <Switch>
-          <Route path="/" exact component={LandingPage} />
-          <Route path="/super" exact component={SuperAdmin} />
           <Route path="/dash" exact component={StoreAdmin} />
           <Route path="/checkout/:id?" component={Checkout} />
           <Route path="/login" exact component={LoginDashboard} />
           <Route path="/signup" exact component={SignupDashboard} />
           <Route path="/product/:id" exact component={ProductPage} />
           <Route path="/orders" exact component={OrdersPage} />
+          <Route path="/:storeUrl" exact component={LandingPage} />
+          <Route path="/" exact component={SuperAdmin} />
         </Switch>
       </Layout>
     </BrowserRouter>

@@ -36,7 +36,6 @@ const validationSchema = Yup.object().shape({
   quantity: Yup.number().required().label("Quantity"),
   description: Yup.string().label("Description"),
   sku: Yup.string().label("SKU"),
-  // section: Yup.string().required().label("Section"),
 });
 
 const ProductDetails = ({ id }) => {

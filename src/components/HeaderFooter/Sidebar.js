@@ -15,7 +15,6 @@ import {
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
-import Icon from "@mdi/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { showSidebar } from "../../actions/sidebarActions";
@@ -104,7 +103,7 @@ function Sidebar() {
       <List component="nav">
         <ListItemButton
           selected={location.pathname === "/"}
-          onClick={() => followLink("/")}
+          onClick={() => followLink(account.url ? `/${account.url}` : "/")}
         >
           <ListItemAvatar>
             <Avatar className={classes.primary}>
@@ -113,17 +112,19 @@ function Sidebar() {
           </ListItemAvatar>
           <ListItemText primary="Home" />
         </ListItemButton>
-        <ListItemButton
-          selected={location.pathname === "/dash"}
-          onClick={() => followLink("/dash")}
-        >
-          <ListItemAvatar>
-            <Avatar className={classes.primary}>
-              <FontAwesomeIcon icon="sign-in-alt" />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="Dashboard" />
-        </ListItemButton>
+        {account.role === "admin" && (
+          <ListItemButton
+            selected={location.pathname === "/dash"}
+            onClick={() => followLink("/dash")}
+          >
+            <ListItemAvatar>
+              <Avatar className={classes.primary}>
+                <FontAwesomeIcon icon="sign-in-alt" />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+        )}
         {!account.email && (
           <ListItemButton
             selected={location.pathname === "/login"}
@@ -151,7 +152,13 @@ function Sidebar() {
         {sections.map((section) => (
           <ListItemButton
             key={section.id}
-            onClick={() => followLink(`/#${section.name}`)}
+            onClick={() =>
+              followLink(
+                account.url
+                  ? `/${account.url}#${section.name}`
+                  : `/#${section.name}`
+              )
+            }
           >
             <ListItemAvatar>
               <Avatar className={classes.primary}>

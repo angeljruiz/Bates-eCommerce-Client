@@ -66,7 +66,7 @@ function adjustData(data) {
 
 export default function Widget({
   name,
-  list,
+  list = [],
   action,
   buttonText,
   show,
@@ -75,8 +75,6 @@ export default function Widget({
   modalProps,
 }) {
   const classes = useStyles();
-
-  if (!list || list.length === 0) return <></>;
 
   return (
     <>
@@ -108,7 +106,7 @@ export default function Widget({
         <Table size="small">
           <TableHead>
             <TableRow>
-              {Object.keys(list[0]).map((k, i, self) => (
+              {Object.keys(list[0] || {}).map((k, i, self) => (
                 <TableCell
                   align={i === self.length - 1 ? "right" : "inherit"}
                   key={i}

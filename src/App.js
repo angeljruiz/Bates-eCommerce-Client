@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { useDispatch } from "react-redux";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {

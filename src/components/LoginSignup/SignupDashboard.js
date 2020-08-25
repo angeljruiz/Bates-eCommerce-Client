@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import axios from "axios";
+import * as Yup from "yup";
 
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { Form, Field, Formik } from "formik";
@@ -43,6 +44,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required().min(2).label("First Name"),
+  lastName: Yup.string().required().min(2).label("Last Name"),
+  storeName: Yup.string()
+    .required()
+    .min(4)
+    .matches(/^[\w\s]*$/, "Store name cannot have special characters")
+    .label("Store Name"),
+});
+
 export default function SignupDashboard() {
   const [error, setError] = useState();
   const classes = useStyles();
@@ -50,18 +61,24 @@ export default function SignupDashboard() {
   const history = useHistory();
 
   const handleSignup = (body, { setSubmitting }) => {
+    axios.defaults.baseURL = "/";
+
     axios
       .post("/signup", body)
-      .then(({ data: { token } }) => {
+      .then(async ({ data: { token } }) => {
         const bearer = "Bearer " + token;
         axios.defaults.headers.common["Authorization"] = bearer;
+        axios.defaults.withCredentials = true;
+        axios.defaults.credentials = "include";
         localStorage.setItem("token", bearer);
-        dispatch(init({ email: body.email }));
-        history.push("/");
+        axios.get("/account").then((res) => {
+          dispatch(init(res.data));
+          history.push(`/${body.storeUrl}`);
+        });
       })
       .catch(() => {
         setSubmitting(false);
-        setError("Error. Email already being used?");
+        setError("Error. Email or store name already being used!");
         setTimeout(() => {
           setError(null);
         }, 2500);
@@ -75,11 +92,19 @@ export default function SignupDashboard() {
         lastName: "",
         email: "",
         password: "",
+        storeName: "",
+        storeUrl: "",
       }}
       onSubmit={handleSignup}
+      validationSchema={validationSchema}
     >
-      {() => (
-        <Form>
+      {({ setFieldValue }) => (
+        <Form
+          onChange={(e) => {
+            if (e.target.id === "storeName")
+              setFieldValue("storeUrl", e.target.value.replace(/\s/g, "_"));
+          }}
+        >
           <Container maxWidth="xs">
             <Paper className={classes.paper}>
               {error && (
@@ -97,7 +122,7 @@ export default function SignupDashboard() {
                 <Grid item xs={12} sm={6}>
                   <Field
                     component={TextField}
-                    autoComplete="fname"
+                    autoComplete="given-name"
                     name="firstName"
                     variant="outlined"
                     required
@@ -116,7 +141,30 @@ export default function SignupDashboard() {
                     id="lastName"
                     label="Last Name"
                     name="lastName"
-                    autoComplete="lname"
+                    autoComplete="family-name"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="storeName"
+                    label="Store Name"
+                    name="storeName"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Field
+                    component={TextField}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="storeUrl"
+                    label="Store URL"
+                    disabled
+                    name="storeUrl"
                   />
                 </Grid>
                 <Grid item xs={12}>

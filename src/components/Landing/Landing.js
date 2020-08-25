@@ -5,9 +5,9 @@ import { Typography, Paper, Grid, Box, makeStyles } from "@material-ui/core";
 import { addProduct } from "../../actions/productsActions";
 
 import Product from "../Product/Product";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
-import { addSection, addOrders } from "../../actions/globalActions";
+import { addSection } from "../../actions/globalActions";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -17,14 +17,14 @@ const useStyles = makeStyles((theme) => ({
 
 function Landing() {
   const products = useSelector((state) => state.products, shallowEqual);
-  const orders = useSelector((state) => state.global.dash.orders, shallowEqual);
   const sections = useSelector((state) => state.global.sections, shallowEqual);
+  const params = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
 
   useEffect(() => {
-    axios.defaults.baseURL = "/test_store";
+    axios.defaults.baseURL = `/${params.storeUrl}`;
 
     axios.get("/section").then((res) => {
       res.data = res.data.filter(
@@ -33,17 +33,6 @@ function Landing() {
       res.data.forEach((section) => {
         dispatch(addSection(section));
       });
-    });
-
-    axios.get("/order").then((o) => {
-      o.data = o.data.filter(
-        (z) => orders.findIndex((s) => s.cid === z.cid) === -1
-      );
-      o.data = o.data.map((d) => {
-        delete d.cart;
-        return d;
-      });
-      if (o.data.length > 0) dispatch(addOrders(o.data));
     });
 
     axios.get("/product").then(({ data }) => {
@@ -68,7 +57,8 @@ function Landing() {
 
   useEffect(() => {
     if (history.location.hash) {
-      document.querySelector(history.location.hash).scrollIntoView();
+      let section = document.querySelector(history.location.hash);
+      if (section) section.scrollIntoView();
     }
   });
 
