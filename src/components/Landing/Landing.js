@@ -24,7 +24,8 @@ function Landing() {
   const classes = useStyles();
 
   useEffect(() => {
-    axios.defaults.baseURL = `/${params.storeUrl}`;
+    // axios.defaults.baseURL = `/${params.storeUrl}`;
+    axios.defaults.baseURL = `/test_store`;
 
     axios.get("/section").then((res) => {
       res.data = res.data.filter(

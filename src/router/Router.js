@@ -5,7 +5,7 @@ import Layout from "../layout/Layout";
 import ScrollToTop from "../layout/ScrollToTop";
 
 import LandingPage from "../components/Landing/Landing";
-import SuperAdmin from "../components/Admin/SuperAdmin";
+// import SuperAdmin from "../components/Admin/SuperAdmin";
 import StoreAdmin from "../components/Admin/StoreAdmin";
 import Checkout from "../components/Checkout/Checkout";
 import LoginDashboard from "../components/LoginSignup/LoginDashboard";
@@ -25,8 +25,7 @@ function Router() {
           <Route path="/signup" exact component={SignupDashboard} />
           <Route path="/product/:id" exact component={ProductPage} />
           <Route path="/orders" exact component={OrdersPage} />
-          <Route path="/:storeUrl" exact component={LandingPage} />
-          <Route path="/" exact component={SuperAdmin} />
+          <Route path="/:storeUrl?" exact component={LandingPage} />
         </Switch>
       </Layout>
     </BrowserRouter>
